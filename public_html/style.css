@@ -1,6 +1,24 @@
 body {
- margin: 1cm;
- font-family: arial;
+ margin: 5px;
+ font-family: Arial, Helvetica;
+}
+h1{
+  margin-top: 4px;
+  padding: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font: bold 15px arial ;
+  background-color: #D8E7F5;
+  border: solid 1px rgb(124,192,255);
+  color: black;
+}
+h2{
+  font: bold 14px arial;
+  color: black;
+  border: solid 1px rgb(124,192,255);
+  padding: 4px;
+  background-color: #D8E7F5;
+  
 }
 .emph{
   font-weight:bold;
@@ -12,18 +30,28 @@ body {
 table.panel {
   border-collapse: collapse;
   border-spacing: 0px;
-  border: 1px solid grey;
+  border: 1px solid rgb(124,192,255);
   margin-left: 5px; 
   background-color: #F1F3F5;
 }
+table.infolineTop {
+  margin:0px;
+  padding:0px;
+}
+
+tr {
+  margin:0px;
+  padding:0px;
+}
 th {
-  border: solid 1px grey;
   font: bold 13px arial;
+  border: solid 1px rgb(124,192,255);
   vertical-align:top;
   text-align: left;
-  background-color: #FFBABA;
-  padding-left: 5px;
-  padding-right: 5px;
+  background-color: #D8E7F5;
+  padding-left: 3px;
+  padding-right: 3px;
+  white-space:nowrap;
 }
 td {  
   vertical-align:top;
@@ -31,9 +59,19 @@ td {
   font: 13px arial;
   padding-left: 5px;
   padding-right: 5px;
+  white-space: nowrap;
+}
+td.maincontent {  
+  vertical-align:top;
+  text-align: left;
+  font: 13px arial;
+  padding-left: 0px;
+  padding-right: 0px;
+  white-space: nowrap;
+  background-color:#efefef;  
 }
 td.panel {
-  border: 1px dashed grey;
+  border: 1px dashed #cccccc;
   text-align: left;
   font: 13px arial;
   padding-left: 5px;
@@ -106,12 +144,11 @@ input.form{
   font-size:11px;
 }
 a {
-  color:#FB3A3A;
+  color:rgb(84,152,215);
   text-decoration:none;
 }
-a:hover{
-  color:#FF3D3D;
-  background-color:white;
+a:hover {
+  color:rgb(250,164,39);
   text-decoration:none;
 }
 a.pager{
@@ -135,11 +172,13 @@ a.pager{
   background-color:#efefef;
   padding: 10px;
   width: 150px;
+  height: 400px;
 }
 .middle {
-  border-top: 1px solid grey;
+  border: 1px solid grey;
   border-bottom: 1px solid grey;
   padding: 10px;
+  height: 400px;
 }
 .right {
   border: 1px solid grey;
@@ -152,19 +191,6 @@ a.pager{
 
 }
 
-a.menu{
-  color:#000000;
-  text-decoration:none;
-  font-weight: bold;
-  font-size:11px;
-}
-
-a.menu:hover{
-  color:#FB3A3A;
-  text-decoration:none;
-  font-weight: bold;
-  font-size:11px;
-}
 .time{
   text-align:right;
   font-size:10px;
@@ -179,28 +205,50 @@ a.menu:hover{
 td.time {
   text-align: left;
 }
+td.infolineTop{
+  text-align:left;
+  font-size:12px;
+  border: 1px solid grey;
+  margin:0px;
+  padding:2px;
+  background-color: #F1F3F5;
+}
+td.top{
+  text-align:left;
+  font-size:12px;
+  border: 1px solid grey;
+  margin:0px;
+  padding:2px;
+  background-color:#efefef;
+}
+
 .positionLeft{
   float: left;
   margin-right: 10px;
 }
 
-form select, form input[type="text"], form textarea {
-  font-size:11px;
-  width:200px;
-}
-form textarea.textarea {
-  width:450px;
-}
 
-A.menu {
-	COLOR: #FB3A3A; FONT-SIZE: 11px; FONT-WEIGHT: bold; TEXT-DECORATION: underline
-}
-A.menu:hover {
-	COLOR: #C3814E; FONT-SIZE: 11px; FONT-WEIGHT: bold; TEXT-DECORATION: underline
-}
+
 
 p {
   font-size:13px;
+}
+form select,
+form input[type="text"],
+form input[type="password"],
+form input[type="file"],
+form textarea {
+  padding-left:2px;
+  border: thin solid #a0a0a0;
+  background-color : #ffffff;
+}
+form input[type="submit"] {
+  border: thin solid #a0a0a0;
+  margin-right:5px;
+  margin-top:5px;
+}
+form input[type="file"] {
+  border: thin solid #a0a0a0;
 }
 .hoverButton {  background-color: #FB3A3A}
 .alinks {  font-family: Arial, Helvetica, sans-serif; text-decoration: underline; font-weight: bold; color: #FB3A3A; font-size: 13px}

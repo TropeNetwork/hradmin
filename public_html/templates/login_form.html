@@ -1,6 +1,6 @@
 <html>
 <head>
- <title>{title}</title>
+ <title>HRAdmin Login</title>
  <meta name="autor" value="Carsten Bleek"></meta>
  <meta keywords="Joboter"></meta>
  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></meta>
@@ -8,27 +8,37 @@
  {menuhead}
 </head>
 <body>
-<h2>Anmeldung</h2>
+<center>
 <!-- login form to the admin part -->
 <form method="post" action="index.php">
-    <table style="border:1px dashed black;margin-left: 12px;">
+    <table style="border:1px solid #cccccc;margin-left: 12px; padding: 12px; background: #F1F3F5;">
+    <tr>
+      <td>
+        <img src="/images/security.png" alt="login">
+      </td>
+      <td>
+      <table>
+        <tr>
+          <td colspan="2">
+          	<h1 style=" color:#333;" >Anmeldung</h1>
+          </td>
+        </tr>
         <tr>
             <td>Login:</td>
-            <td><input name="handle" type="text" size="10" maxlength="15" /></td>
+            <td><input name="handle" type="text" size="10" maxlength="10" /></td>
         </tr>
         <tr>
             <td>Passwort:</td>
             <td><input name="passwd" type="password" size="10" maxlength="10" /></td>
         </tr>
-        <!--
-        <tr>
-            <td colspan="2">Remember me <input type="checkbox" name="rememberMe" /></td>
-        </tr>
-        -->
         <tr>
             <td colspan="2"><input type="submit" value="Anmelden" /></td>
         </tr>
+      </table>
+      </td>
+    </tr>
     </table>
 </form>
+</center>
 </body>
 </html>
