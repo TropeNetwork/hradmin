@@ -1,0 +1,208 @@
+body {
+ margin: 1cm;
+ font-family: arial;
+}
+.emph{
+  font-weight:bold;
+  color:#FB3A3A;
+}
+.info{
+  font-weight:bold;
+}
+table.panel {
+  border-collapse: collapse;
+  border-spacing: 0px;
+  border: 1px solid grey;
+  margin-left: 5px; 
+  background-color: #F1F3F5;
+}
+th {
+  border: solid 1px grey;
+  font: bold 13px arial;
+  vertical-align:top;
+  text-align: left;
+  background-color: #FFBABA;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+td {  
+  vertical-align:top;
+  text-align: left;
+  font: 13px arial;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+td.panel {
+  border: 1px dashed grey;
+  text-align: left;
+  font: 13px arial;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+td.arrow{
+  padding: 5px;
+  vertical-align: top;
+}
+.small{
+    font-size:10px;
+}
+td.logo{
+  padding-right: 10px;
+}
+td.form{
+  padding-left: 10px;
+  margin-left: 10px;
+  width: 100%;
+  text-align: left;
+  vertical-align: bottom;
+}
+input.form{
+  width:200px;
+}
+.red{
+  background-color:#FB3A3A;
+  color:white;
+  font-weight:bold;
+}
+
+.header{
+  padding: 1px 10px 1px 10px;
+  background-color:#FB3A3A;
+  color:white;
+  font-weight:bold;
+  width: 60%
+}
+.message{
+  padding: 5px;
+  border: 1px solid grey;
+  width: 60%;
+}
+.error{
+  padding: 5px;
+  width: 60%;
+}
+
+.black{
+  background-color:#FB3A3A;
+  color:black;
+  font-weight:bold;
+}
+.inactive{
+  background-color:#FB3A3A;
+  color:black;
+  font-weight:normal;
+}
+.bg1{
+  border-top:1px solid #f0f0f0;
+  background-color:#EEEEEE;
+  padding-bottom: 2px;
+  border-bottom:2px solid #ffffff;
+}
+
+.bg2{
+  background-color:white;
+  padding-bottom: 10px;
+  padding-left:10px;
+  font-size:11px;
+}
+a {
+  color:#FB3A3A;
+  text-decoration:none;
+}
+a:hover{
+  color:#FF3D3D;
+  background-color:white;
+  text-decoration:none;
+}
+a.pager{
+  font-weight:bold;
+}
+.pagerCurrentLink{
+  color: red;
+}
+.red a{
+  color:#FFFFFF;
+  text-decoration:none;
+}
+.red a:hover{
+  color:#FFFFFF;
+  background-color: #FB3A3A;
+  text-decoration:underine;
+}
+
+.left {
+  border: 1px solid grey;
+  background-color:#efefef;
+  padding: 10px;
+  width: 150px;
+}
+.middle {
+  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
+  padding: 10px;
+}
+.right {
+  border: 1px solid grey;
+  background-color:#efefef;
+  padding: 10px;
+}
+.infoline{
+  text-align:right;
+  font-size:10px;
+
+}
+
+a.menu{
+  color:#000000;
+  text-decoration:none;
+  font-weight: bold;
+  font-size:11px;
+}
+
+a.menu:hover{
+  color:#FB3A3A;
+  text-decoration:none;
+  font-weight: bold;
+  font-size:11px;
+}
+.time{
+  text-align:right;
+  font-size:10px;
+  color:#c0c0c0;
+}
+.time a{
+  color:#c0c0c0;
+}
+.time a:hover{
+  color:#FB3A3A;
+}
+td.time {
+  text-align: left;
+}
+.positionLeft{
+  float: left;
+  margin-right: 10px;
+}
+
+form select, form input[type="text"], form textarea {
+  font-size:11px;
+  width:200px;
+}
+form textarea.textarea {
+  width:450px;
+}
+
+A.menu {
+	COLOR: #FB3A3A; FONT-SIZE: 11px; FONT-WEIGHT: bold; TEXT-DECORATION: underline
+}
+A.menu:hover {
+	COLOR: #C3814E; FONT-SIZE: 11px; FONT-WEIGHT: bold; TEXT-DECORATION: underline
+}
+
+p {
+  font-size:13px;
+}
+.hoverButton {  background-color: #FB3A3A}
+.alinks {  font-family: Arial, Helvetica, sans-serif; text-decoration: underline; font-weight: bold; color: #FB3A3A; font-size: 13px}
+.aresults {  font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #FB3A3A; text-decoration: underline}
+.plain {  font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #000000}

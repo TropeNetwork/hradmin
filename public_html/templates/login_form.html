@@ -1,0 +1,34 @@
+<html>
+<head>
+ <title>{title}</title>
+ <meta name="autor" value="Carsten Bleek"></meta>
+ <meta keywords="Joboter"></meta>
+ <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></meta>
+ <link rel="stylesheet"  href="/style.css">
+ {menuhead}
+</head>
+<body>
+<h2>Anmeldung</h2>
+<!-- login form to the admin part -->
+<form method="post" action="index.php">
+    <table style="border:1px dashed black;margin-left: 12px;">
+        <tr>
+            <td>Login:</td>
+            <td><input name="handle" type="text" size="10" maxlength="15" /></td>
+        </tr>
+        <tr>
+            <td>Passwort:</td>
+            <td><input name="passwd" type="password" size="10" maxlength="10" /></td>
+        </tr>
+        <!--
+        <tr>
+            <td colspan="2">Remember me <input type="checkbox" name="rememberMe" /></td>
+        </tr>
+        -->
+        <tr>
+            <td colspan="2"><input type="submit" value="Anmelden" /></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

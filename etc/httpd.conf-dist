@@ -1,0 +1,15 @@
+<VirtualHost 10.10.2.2:80>
+    ServerName hradmin.joboter.de
+    ServerAlias hradmin.joboter24.de
+
+    DocumentRoot /services/pkg_hradmin/public_html
+    <Directory /services>
+      AllowOverride None
+    </Directory>
+ 
+    php_admin_value include_path .:/services/pkg_hradmin/public_html:/usr/local/lib/php
+    ErrorLog /services/pkg_hradmin/log/error.log
+    CustomLog /services/pkg_hradmin/log/access.log common
+</VirtualHost>
+
+
