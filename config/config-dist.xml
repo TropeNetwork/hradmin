@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <conf>
     <database>
       <user>user</user>
@@ -6,4 +6,8 @@
       <host>host</host>
       <name>database</name>
     </database>
+    <i18n>
+    	<locale>en_US</locale>
+    	<charset>UTF-8</charset>
+    </i18n>
 </conf>

@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: config.inc,v 1.2 2004/10/28 10:37:06 goetsch Exp $
+ *   $Id: config.inc,v 1.3 2004/11/04 09:04:04 goetsch Exp $
  */
 require_once 'Config.php';
 require_once 'DB.php';
@@ -35,7 +35,11 @@ $dsn = 'mysql://'.$hradmin_settings['database']['user'].':'.
                   $hradmin_settings['database']['pass'].'@'.
                   $hradmin_settings['database']['host'].'/'.
                   $hradmin_settings['database']['name'];     
-                  
+
+// i18n                   
+define('LOCALE',$hradmin_settings['i18n']['locale']);
+define('CHARSET',$hradmin_settings['i18n']['charset']);
+
 $db = DB::connect($dsn);
 
 if (DB::isError($db)) {

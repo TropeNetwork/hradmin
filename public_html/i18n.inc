@@ -18,11 +18,12 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: i18n.inc,v 1.4 2004/10/28 10:37:06 goetsch Exp $
+ *   $Id: i18n.inc,v 1.5 2004/11/04 09:04:04 goetsch Exp $
  */
-setlocale(LC_MESSAGES, 'de_DE');
+setlocale(LC_MESSAGES, LOCALE);
 $domain = 'messages';
 bindtextdomain($domain, dirname(__FILE__).'/i18n');
+bind_textdomain_codeset($domain, CHARSET);
 textdomain($domain);
 
 ?>

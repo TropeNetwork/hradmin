@@ -18,14 +18,16 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: skin.inc,v 1.3 2004/10/28 10:37:06 goetsch Exp $
+ *   $Id: skin.inc,v 1.4 2004/11/04 09:04:04 goetsch Exp $
  */
 require_once 'HTML/Template/Sigma.php';
 require_once 'layersmenu/lib/PHPLIB.php';
 require_once 'layersmenu/lib/layersmenu-common.inc.php';
 require_once 'layersmenu/lib/layersmenu.inc.php';
+header('Content-Type: text/html; charset='.CHARSET);
 $tpl =& new HTML_Template_Sigma(dirname(__FILE__).'/templates/');
 $tpl->loadTemplateFile('template.html');
+$tpl->setCallbackFunction('gettext','gettext');
 $layersmenu = '<script language="JavaScript" type="text/javascript" src="layersmenu/libjs/layersmenu-library.js"></script>'."\n";
 $layersmenu .= '<script language="JavaScript" type="text/javascript" src="layersmenu/libjs/layersmenu.js"></script>'."\n";
 $mid = new LayersMenu(6, 7, 2, 1);
