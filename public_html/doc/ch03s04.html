@@ -1,0 +1,18 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>3.4. Configure your webserver</title><link rel="stylesheet" href="docbook.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.65.1"><link rel="home" href="index.html" title="HRAdmin Manual 1.0"><link rel="up" href="ch03.html" title="Chapter 3. Installation"><link rel="previous" href="ch03s03.html" title="3.3. Configuration"><link rel="next" href="ch04.html" title="Chapter 4. FAQ's"><link rel="preface" href="pr01.html" title="Preface"><link rel="chapter" href="ch01.html" title="Chapter 1. Introduction"><link rel="chapter" href="ch02.html" title="Chapter 2. Requirements"><link rel="chapter" href="ch03.html" title="Chapter 3. Installation"><link rel="chapter" href="ch04.html" title="Chapter 4. FAQ's"><link rel="chapter" href="ch05.html" title="Chapter 5. ToDo"><link rel="chapter" href="ch06.html" title="Chapter 6. Support"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">3.4. Configure your webserver</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03s03.html">Prev</a> </td><th width="60%" align="center">Chapter 3. Installation</th><td width="20%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr></table><hr></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2460264"></a>3.4. Configure your webserver</h2></div></div><div></div></div><p>Point the DocumentRoot to the public_html directory of your
+      installation. Make sure you enabled php.</p><div class="example"><a name="id2460274"></a><p class="title"><b>Example 3.1. sample Apache configuration</b></p><pre class="programlisting">&lt;VirtualHost *:80&gt;
+    ServerName hradmin.example.com
+    &lt;Location /server-info&gt;
+      SetHandler server-info
+      Order deny,allow
+      Deny from all
+      Allow from .cross.intern
+    &lt;/Location&gt;
+
+    DocumentRoot /var/www/hradmin/public_html
+ 
+    php_admin_value include_path .:/var/www/hradmin/public_html:/usr/lib/php
+
+    AliasMatch ^/docs/(.*) /home/gerrit/workspace/pkg_hradmin/public_html/doc/$1
+    ErrorLog /var/www/hradmin/log/error_log
+    CustomLog /var/www/hradmin/log/access.log common
+&lt;/VirtualHost&gt;</pre></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03s03.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch03.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">3.3. Configuration </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 4. FAQ's</td></tr></table></div></body></html>
