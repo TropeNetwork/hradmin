@@ -1,5 +1,6 @@
 <?php
 require_once 'config.inc';
+include_once 'i18n.inc';
 require_once 'LiveUser/Admin/Perm/Container/DB_Medium.php';
 require_once 'LiveUser/Admin/Auth/Container/DB.php';
 require_once 'LiveUser/Perm/Container/DB/Medium.php';
@@ -68,10 +69,6 @@ if (!$objRightsPerm->init_ok) {
     die('impossible to initialize' . $objRightsPerm->getMessage());
 }
 
-$login  = 'Benutzer: '.$usr->getProperty('handle').'<br> ';
-$login .= '<a href="?logout=1">Abmelden</a>';
-
-$tpl->setVariable('login_top',$login);
 $level = 0;
 
 function checkApplication() {

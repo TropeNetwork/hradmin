@@ -19,19 +19,19 @@ $form = new HTML_QuickForm('edit','POST');
 $form->addElement('text', 'name', _("Name"));
 $tpl->setVariable(array('maxlength'=>'100',
                   'class'=>'formFieldLong'));
-$form->addElement('text', 'description', _("Beschreibung"));
+$form->addElement('text', 'description', _("Description"));
 $tpl->setVariable(array('maxlength'=>'100',
                   'class'=>'formFieldLong'));
-$form->addElement('text', 'define', _("define"));
+$form->addElement('text', 'define', _("Define name"));
 $tpl->setVariable(array('maxlength'=>'15',
                   'class'=>'formFieldLong'));   
 
 if ($edit) {
     if ($level>1) {
-        $form->addElement('submit', 'submit', _("Speichern"));
+        $form->addElement('submit', 'submit', _("Save"));
     }
     if ($level>2) {
-        $form->addElement('submit', 'delete', _("Löschen"));
+        $form->addElement('submit', 'delete', _("Delete"));
     }
     
     $areas = $objRightsAdminPerm->getAreas(array('where_application_id' => $_GET['app_id'],
@@ -42,10 +42,10 @@ if ($edit) {
     $form->addElement('hidden', 'id', $_GET['edit']);
     $form->setDefaults($defaultValues);
 } else {
-    $form->addElement('submit', 'submit', _("Anlegen"));
+    $form->addElement('submit', 'submit', _("Create"));
 }
 
-$form->addRule('name', "Name darf nicht leer sein", 'required');
+$form->addRule('name', _("Name is required!"), 'required');
 if ($level<2) {
     $form->freeze();   
 }
@@ -77,7 +77,7 @@ if ($edit) {
     $rightcontent = '';
     $tpl->setVariable('contentright',$rightcontent);
 }
-$tpl->setVariable('title',"Bereich");
+$tpl->setVariable('title',_("Area"));
 
 $tpl->show();
 

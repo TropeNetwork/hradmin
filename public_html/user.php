@@ -33,16 +33,16 @@ $form->addElement('text','email', _("Email"),
     $tpl->setVariable(array('maxlength'=>'10',
                             'class'=>'formFieldLong'));
                   
-    $form->addElement('password', 'password2', _("Wiederholung"));
+    $form->addElement('password', 'password2', _("Repeat password"));
     $tpl->setVariable(array('maxlength'=>'10',
                             'class'=>'formFieldLong'));  
 
 if ($edit || $delete) {
     if ($level>1) {
-        $form->addElement('submit', 'submit', _("Speichern"));
+        $form->addElement('submit', 'submit', _("Save"));
     }
     if ($level>2) {
-        $form->addElement('submit', 'delete', _("Löschen"));
+        $form->addElement('submit', 'delete', _("Delete"));
     }
     $filters = array(
         'auth_user_id' => array('name'  => 'auth_user_id', 
@@ -58,7 +58,7 @@ if ($edit || $delete) {
     $form->setDefaults($defaultValues);
 } else {
 
-    $form->addElement('submit', 'submit', _("Anlegen"));
+    $form->addElement('submit', 'submit', _("Create"));
 }
 
 // groupstuff
@@ -71,15 +71,15 @@ foreach($groups as $group) {
 }
 
 // form rules
-$form->addRule('login', "Login darf nicht leer sein", 'required');
+$form->addRule('login', _("Username is required!"), 'required');
 if (!$delete) {
-$form->addRule('name', "Name darf nicht leer sein", 'required');
-$form->addRule('email', "Email darf nicht leer sein", 'required');
+$form->addRule('name', _("Name is required!"), 'required');
+$form->addRule('email', _("Email is required!"), 'required');
 if (!$edit) {
-    $form->addRule('password', "Password darf nicht leer sein", 'required');
-    $form->addRule('password2', "Password darf nicht leer sein", 'required');
+    $form->addRule('password', _("Password is required!"), 'required');
+    $form->addRule('password2', _("Password is required!"), 'required');
 }
-$form->addRule(array('password', 'password2'), 'Die Passwörter sind nicht gleich', 'compare', null, 'client');
+$form->addRule(array('password', 'password2'), _("Passwords does not match!"), 'compare', null, 'client');
 }
 if ($level < 2) {
     $form->freeze();
@@ -140,7 +140,7 @@ $renderer->setRequiredTemplate('{label}<font color="red" size="1">*</font>');
 $renderer->setErrorTemplate('<font color="orange" size="1">{error}</font><br/>{html}');            
 
 $form->accept($renderer);
-$tpl->setVariable('title',"Benutzer");
+$tpl->setVariable('title',_("User"));
 $tpl->show();
 
 

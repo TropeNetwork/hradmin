@@ -20,17 +20,17 @@ $tpl->setVariable('layersmenu_footer',$mid->getFooter());
 
 function getMenuString() {
     global $objRightsAdminPerm;
-    $menu = ".|Home|index.php|Home|home.png\n";
-    $menu .= ".|Anwendungen|applications.php||\n";
+    $menu = ".|".gettext("Home")."|index.php|".gettext("Home")."|home.png\n";
+    $menu .= ".|".gettext("Applications")."|applications.php|".gettext("Applications")."|\n";
     $apps = $objRightsAdminPerm->getApplications();
     foreach($apps as $app) {
         $menu .= "..|".$app['name']."|application.php?edit=".$app['application_id']."||\n";
         $areas = $objRightsAdminPerm->getAreas(array('where_application_id'=>$app['application_id'] ));
-        $menu .= "...|Bereiche|areas.php?app_id=".$app['application_id']."||\n";
+        $menu .= "...|".gettext("Areas")."|areas.php?app_id=".$app['application_id']."|".gettext("Areas")."|\n";
         $menu .= "...|---|||\n";
         foreach($areas as $area) {
             $menu .= "...|".$area['name']."|area.php?edit=".$area['area_id']."&amp;app_id=".$app['application_id']."||\n";
-            $menu .= "....|Rechte|rights.php?area_id=".$area['area_id']."&amp;app_id=".$app['application_id']."||\n";
+            $menu .= "....|".gettext("Rights")."|rights.php?area_id=".$area['area_id']."&amp;app_id=".$app['application_id']."|".gettext("Rights")."|\n";
             $menu .= "....|---|||\n";
             $rights = $objRightsAdminPerm->getRights(array('where_area_id'=> $area['area_id']));
             foreach($rights as $right) {
@@ -38,10 +38,10 @@ function getMenuString() {
             }
         }
     }
-    $menu .= ".|Benutzer|users.php|Benutzer|users.png\n";
-    $menu .= ".|Gruppen|groups.php|Gruppen|groups.png\n";
-    $menu .= ".|Abmelden|?logout=1||\n";
-    $menu .= ".|Hilfe|||help.png\n";
+    $menu .= ".|".gettext("Users")."|users.php|".gettext("Users")."|users.png\n";
+    $menu .= ".|".gettext("Groups")."|groups.php|".gettext("Groups")."|groups.png\n";
+    $menu .= ".|".gettext("Logout")."|?logout=1|".gettext("Logout")."|\n";
+    $menu .= ".|".gettext("Help")."||".gettext("Help")."|help.png\n";
     return $menu;
 }
 ?>

@@ -19,9 +19,9 @@ foreach($users as $user) {
     $tpl->parseCurrentBlock();
 }
 if ($level>2) {
-    $right = '<a href="user.php" title="Neuer Benutzer"><img src="/images/new.png" alt="Neuer Benutzer" /></a>';
+    $right = '<a href="user.php" title="'._("New user").'"><img src="/images/new.png" alt="'._("New user").'" /></a>';
 }
 $tpl->setVariable('contentright',$right);
-$tpl->setVariable('title',"Benutzer");
+$tpl->setVariable('title',_("User"));
 $tpl->show();
 ?>

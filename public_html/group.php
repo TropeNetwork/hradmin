@@ -5,10 +5,10 @@ require_once 'HTML/QuickForm/Renderer/ITStatic.php';
 
 include_once 'common.inc';
 
-define ('HRADMIN_LEVEL_0',"");
-define ('HRADMIN_LEVEL_1',"Lesen");
-define ('HRADMIN_LEVEL_2',"Schreiben");
-define ('HRADMIN_LEVEL_3',"Löschen");
+define ('HRADMIN_LEVEL_0',_("None"));
+define ('HRADMIN_LEVEL_1',_("Read"));
+define ('HRADMIN_LEVEL_2',_("Write"));
+define ('HRADMIN_LEVEL_3',_("Delete"));
 
 if (!checkRights(HRADMIN_RIGHT_GROUPS)) {
     header("Location: noright.php");
@@ -22,20 +22,20 @@ $form->addElement('text', 'name', _("Name"));
 $tpl->setVariable(array('maxlength'=>'100',
                   'class'=>'formFieldLong'));
 
-$form->addElement('text', 'description', _("Beschreibung"));
+$form->addElement('text', 'description', _("Description"));
 $tpl->setVariable(array('maxlength'=>'100',
                   'class'=>'formFieldLong'));
 
-$form->addElement('text', 'define', _("define"));
+$form->addElement('text', 'define', _("Define name"));
 $tpl->setVariable(array('maxlength'=>'15',
                   'class'=>'formFieldLong'));
 
 if ($edit) {
     if ($level>1) {
-        $form->addElement('submit', 'submit', _("Speichern"));
+        $form->addElement('submit', 'submit', _("Save"));
     }
     if ($level>2) {
-        $form->addElement('submit', 'delete', _("Löschen"));
+        $form->addElement('submit', 'delete', _("Delete"));
     }
     
     $groups = $objRightsAdminPerm->getGroups(array('where_group_id'=>$_GET['edit']));
@@ -46,7 +46,7 @@ if ($edit) {
     
     $form->setDefaults($defaultValues);
 } else {
-    $form->addElement('submit', 'submit', _("Anlegen"));
+    $form->addElement('submit', 'submit', _("Create"));
 }
 $tpl->addBlockfile('contentmain', 'group', 'editgroup.html');
 
@@ -70,7 +70,7 @@ foreach($apps as $app) {
     }
 }
 
-$form->addRule('name', "Name darf nicht leer sein", 'required');
+$form->addRule('name', _("Name is required!"), 'required');
 if ($level < 2) {
     $form->freeze();
 }
@@ -117,7 +117,7 @@ $renderer->setErrorTemplate('<font color="orange" size="1">{error}</font><br/>{h
 $form->accept($renderer);
 
 
-$tpl->setVariable('title',"Gruppe");
+$tpl->setVariable('title',_("Group"));
 
 $tpl->show();
 

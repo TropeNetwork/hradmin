@@ -1,0 +1,174 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid	""
+msgstr	"Project-Id-Version: 0.0.1\n"
+	"Report-Msgid-Bugs-To: \n"
+	"POT-Creation-Date: 2004-10-22 12:26+0200\n"
+	"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+	"Last-Translator: Gerrit Goetsch <goetsch@cross-solution.de>\n"
+	"Language-Team: LANGUAGE <LL@li.org>\n"
+	"MIME-Version: 1.0\n"
+	"Content-Type: text/plain; charset=ISO-8859-1\n"
+	"Content-Transfer-Encoding: 8bit\n"
+
+msgid	"Application"
+msgstr	"Anwendung"
+
+#, fuzzy
+msgid	"Applications"
+msgstr	"Anwendungen"
+
+msgid	"Area"
+msgstr	"Bereich"
+
+msgid	"Areas"
+msgstr	"Bereiche"
+
+msgid	"Contact your administrator!"
+msgstr	"Wenden Sie sich an Ihren Administrator!"
+
+msgid	"Create"
+msgstr	"Anlegen"
+
+msgid	"Define name"
+msgstr	"Define Name"
+
+msgid	"Delete"
+msgstr	"Löschen"
+
+msgid	"Description"
+msgstr	"Beschreibung"
+
+msgid	"Edit"
+msgstr	"Bearbeiten"
+
+msgid	"Email"
+msgstr	"Email"
+
+#, fuzzy
+msgid	"Email is required!"
+msgstr	"Name darf nicht leer sein!"
+
+msgid	"Error"
+msgstr	"Fehler"
+
+#, fuzzy
+msgid	"Group"
+msgstr	"Gruppe"
+
+msgid	"Groups"
+msgstr	"Gruppen"
+
+msgid	"HRAdmin Login"
+msgstr	"HRAdmin Anmeldung"
+
+msgid	"Help"
+msgstr	"Hilfe"
+
+msgid	"Home"
+msgstr	"Start"
+
+msgid	"Id"
+msgstr	"Id"
+
+msgid	"Level"
+msgstr	"Level"
+
+msgid	"Login"
+msgstr	"Anmelden"
+
+msgid	"Logout"
+msgstr	"Abmelden"
+
+msgid	"Mainsite"
+msgstr	"Hauptseite"
+
+msgid	"Name"
+msgstr	"Name"
+
+msgid	"Name is required!"
+msgstr	"Name darf nicht leer sein!"
+
+#, fuzzy
+msgid	"New Area"
+msgstr	"Neuer Bereich"
+
+#, fuzzy
+msgid	"New Group"
+msgstr	"Neue Gruppe"
+
+#, fuzzy
+msgid	"New application"
+msgstr	"Neue Anwendung"
+
+msgid	"New area"
+msgstr	"Neuer Bereich"
+
+msgid	"New right"
+msgstr	"Neues Recht"
+
+#, fuzzy
+msgid	"New user"
+msgstr	"Neuer Benutzer"
+
+msgid	"None"
+msgstr	"Kein"
+
+msgid	"Password"
+msgstr	"Passwort"
+
+#, fuzzy
+msgid	"Password is required!"
+msgstr	"Password darf nicht leer sein!"
+
+msgid	"Password:"
+msgstr	"Passwort:"
+
+msgid	"Passwords does not match!"
+msgstr	"Passwörter müssen gleich sein!"
+
+msgid	"Read"
+msgstr	"Lesen"
+
+#, fuzzy
+msgid	"Repeat password"
+msgstr	"Passwort"
+
+msgid	"Right"
+msgstr	"Recht"
+
+msgid	"Rights"
+msgstr	"Rechte"
+
+msgid	"Save"
+msgstr	"Speichern"
+
+#, fuzzy
+msgid	"User"
+msgstr	"Benutzer"
+
+msgid	"Username"
+msgstr	"Benutzername"
+
+#, fuzzy
+msgid	"Username is required!"
+msgstr	"Username darf nicht leer sein!"
+
+msgid	"Username:"
+msgstr	"Benutzername:"
+
+msgid	"Users"
+msgstr	"Benutzer"
+
+msgid	"Write"
+msgstr	"Schreiben"
+
+msgid	"You have no right for this site!"
+msgstr	"Sie haben keine Berechtigung für diese Seite!"
+
+msgid	"powered by"
+msgstr	"powered by"

@@ -22,9 +22,9 @@ foreach($areas as $area) {
     $tpl->parseCurrentBlock();
 }
 if ($level>2) {
-    $right = '<a href="area.php?app_id='.$current_application_id.'" title="Neuer Bereich"><img src="/images/new.png" alt="Neuer Bereich" /></a>';
+    $right = '<a href="area.php?app_id='.$current_application_id.'" title="'._("New area").'"><img src="/images/new.png" alt="'._("New Area").'" /></a>';
 }
 $tpl->setVariable('contentright',$right);
-$tpl->setVariable('title',"Bereiche");
+$tpl->setVariable('title',_("Areas"));
 $tpl->show();
 ?>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4CR1//EN"
+"http://www.docbook.org/xml/4.4CR1/docbookx.dtd">
+<book id="manual" lang="de">
+  <title>HRAdmin Manual 1.0</title>
+
+  <titleabbrev>Manual 1.0</titleabbrev>
+
+  <bookinfo>
+    <date>21.10.2004</date>
+
+    <author>
+      <surname>Goetsch</surname>
+
+      <firstname>Gerrit</firstname>
+
+      <email>goetsch@cross-solution.de</email>
+    </author>
+  </bookinfo>
+
+  <preface>
+    <title>Preface</title>
+
+    <para></para>
+  </preface>
+
+  <chapter>
+    <title>Introduction</title>
+
+    <para></para>
+  </chapter>
+
+  <chapter>
+    <title>Requirements</title>
+
+    <para></para>
+  </chapter>
+
+  <chapter>
+    <title>Installation</title>
+
+    <para></para>
+
+    <section>
+      <title>Installation from a tarball</title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title>Installention from CVS</title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title>Configuration</title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title>Configure your webserver</title>
+
+      <para></para>
+    </section>
+  </chapter>
+
+  <chapter>
+    <title>FAQ's</title>
+
+    <para></para>
+  </chapter>
+
+  <chapter>
+    <title>ToDo</title>
+
+    <para></para>
+  </chapter>
+
+  <chapter>
+    <title>Support</title>
+
+    <para>If you want support for this software, please contact the
+    CROSS-Solution.</para>
+
+    <para><email>info@cross-solution.de</email></para>
+  </chapter>
+</book>
