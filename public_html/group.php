@@ -117,7 +117,7 @@ $renderer->setErrorTemplate('<font color="orange" size="1">{error}</font><br/>{h
 $form->accept($renderer);
 
 
-
+$tpl->setVariable('title',"Gruppe");
 
 $tpl->show();
 

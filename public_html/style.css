@@ -28,11 +28,17 @@ h2{
   font-weight:bold;
 }
 table.panel {
-  border-collapse: collapse;
-  border-spacing: 0px;
-  border: 1px solid rgb(124,192,255);
+  border: 1px solid #cccccc;
   margin-left: 5px; 
-  background-color: #F1F3F5;
+  padding-bottom:5px;
+  background-color: #F1F3F5;  
+}
+table.list {
+  border: 1px solid rgb(124,192,255);
+  font: 13px arial;
+  margin-top: 5px;
+  border-spacing: 0px;
+  border-collapse: collapse;
 }
 table.infolineTop {
   margin:0px;
@@ -249,6 +255,9 @@ form input[type="submit"] {
 }
 form input[type="file"] {
   border: thin solid #a0a0a0;
+}
+img{
+  border: none;
 }
 .hoverButton {  background-color: #FB3A3A}
 .alinks {  font-family: Arial, Helvetica, sans-serif; text-decoration: underline; font-weight: bold; color: #FB3A3A; font-size: 13px}

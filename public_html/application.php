@@ -68,6 +68,7 @@ if ($edit) {
     $rightcontent = '';
     $tpl->setVariable('contentright',$rightcontent);
 }
+$tpl->setVariable('title',"Anwendung");
 $tpl->show();
 
 ?>

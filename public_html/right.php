@@ -87,7 +87,7 @@ $renderer->setRequiredTemplate('{label}<font color="red" size="1">*</font>');
 $renderer->setErrorTemplate('<font color="orange" size="1">{error}</font><br/>{html}');            
 $tpl->addBlockfile('contentmain', 'right', 'editright.html');
 $form->accept($renderer);
-
+$tpl->setVariable('title',"Recht");
 $tpl->show();
 
 ?>

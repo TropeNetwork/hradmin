@@ -21,9 +21,9 @@ foreach($groups as $group) {
     $tpl->parseCurrentBlock();
 }
 if ($level>2) {
-    $right = '<br><a href="group.php">Neue Gruppe</a>';
+    $right = '<a href="group.php" title="Neue Gruppe"><img src="/images/new.png" alt="Neue Gruppe" /></a>';
 }
 $tpl->setVariable('contentright',$right);
-
+$tpl->setVariable('title',"Gruppen");
 $tpl->show();
 ?>

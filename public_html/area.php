@@ -14,7 +14,7 @@ checkApplication();
 
 $form = new HTML_QuickForm('edit','POST');
 
-$form->addElement('hidden', 'app_id', _($current_application_id));
+//$form->addElement('hidden', 'app_id', _($current_application_id));
 
 $form->addElement('text', 'name', _("Name"));
 $tpl->setVariable(array('maxlength'=>'100',
@@ -77,6 +77,7 @@ if ($edit) {
     $rightcontent = '';
     $tpl->setVariable('contentright',$rightcontent);
 }
+$tpl->setVariable('title',"Bereich");
 
 $tpl->show();
 

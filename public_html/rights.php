@@ -24,9 +24,9 @@ foreach($rights as $right) {
     $tpl->parseCurrentBlock();
 }
 if ($level>2) {
-    $rightcontent = '<br><a href="right.php?'.getAppIdParameter().'&'.getAreaIdParameter().'">Neues Recht</a>';
+    $rightcontent = '<a href="right.php?'.getAppIdParameter().'&'.getAreaIdParameter().'" title="Neues Recht"><img src="/images/new.png" alt="Neues Recht" /></a>';
 }
 $tpl->setVariable('contentright',$rightcontent);
-
+$tpl->setVariable('title',"Rechte");
 $tpl->show();
 ?>

@@ -4,7 +4,7 @@ require_once 'LiveUser/Admin/Perm/Container/DB_Medium.php';
 require_once 'LiveUser/Admin/Auth/Container/DB.php';
 require_once 'LiveUser/Perm/Container/DB/Medium.php';
 require_once 'HTML/TreeMenu.php';
-require_once 'class/Template.php';
+
 
 $lu_dsn = array('dsn' => $dsn);
 
@@ -26,7 +26,6 @@ $objRightsAdminPerm->setCurrentLanguage('DE');
 $objRightsAdminPerm->outputRightsConstants(array('prefix'       =>'HRADMIN_RIGHT',
                                                  'area'         => HRADMIN_ADMIN,
                                                  'application'  => HRADMIN),'php');
-//$objRightsAdminAuth->authTableCols= $conf['authContainers'][0]['authTableCols'];
 
 
 if (isset($_GET['app_id']) && !$_GET['app_id']=='') {
@@ -55,9 +54,9 @@ if (isset($_POST['delete'])) {
     $edit=true;
 }
 
-$tpl->setVariable('title',"Admin");
-$tpl->setVariable('path',getPath());
+require_once 'skin.inc';
 
+$tpl->setVariable('path',getPath());
 if (!$usr->isLoggedIn()) {
     $tpl->loadTemplateFile('login_form.html');
     $tpl->show();
@@ -74,30 +73,6 @@ $login .= '<a href="?logout=1">Abmelden</a>';
 
 $tpl->setVariable('login_top',$login);
 $level = 0;
-
-
-// Menu begin
-$icon         = 'folder.gif';
-$expandedIcon = 'folder-expanded.gif';
-
-$menu  = new HTML_TreeMenu();
-
-$nodeApps   = new HTML_TreeNode(array('text' => "Anwendungen", 'link' => "applications.php", 'icon' => $icon, 'expandedIcon' => $expandedIcon));
-if ($current_application_id) {
-    $nodeAreas = &$nodeApps->addItem(new HTML_TreeNode(array('text' => "Bereiche", 'link' => "areas.php?".getAppIdParameter(), 'icon' => $icon, 'expandedIcon' => $expandedIcon)));
-    if ($current_area_id) {
-        $nodeRights = &$nodeAreas->addItem(new HTML_TreeNode(array('text' => "Rechte", 'link' => "rights.php?".getAppIdParameter().'&'.getAreaIdParameter(), 'icon' => $icon, 'expandedIcon' => $expandedIcon)));
-    }
-}
-    
-$menu->addItem($nodeApps);
-$menu->addItem(new HTML_TreeNode(array('text' => "Benutzer", 'link' => "users.php", 'icon' => $icon, 'expandedIcon' => $expandedIcon)));
-$menu->addItem(new HTML_TreeNode(array('text' => "Gruppen", 'link' => "groups.php", 'icon' => $icon, 'expandedIcon' => $expandedIcon)));
-    
-// Create the presentation class
-$treeMenu = &new HTML_TreeMenu_DHTML($menu, array('images' => '../images', 'defaultClass' => 'treeMenuDefault'));
-$tpl->setVariable('menu',$treeMenu->toHtml());
-// menu end
 
 function checkApplication() {
     global $current_application_id;
