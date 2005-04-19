@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: user.php,v 1.4 2004/10/28 10:37:06 goetsch Exp $
+ *   $Id: user.php,v 1.5 2005/04/19 16:57:23 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -70,7 +70,7 @@ if ($edit || $delete) {
                                 'op'    => '=', 
                                 'value' => $_GET['edit'])        
     );
-    $users = $objRightsAdminAuth->getUsers($filters);
+    $users = $admin->getUsers($filters);
     $defaultValues['login']      = $users[0]['handle'];
     $defaultValues['name']       = $users[0]['name'];
     $defaultValues['email']      = $users[0]['email'];
@@ -84,9 +84,9 @@ if ($edit || $delete) {
 
 // groupstuff
 $tpl->setCurrentBlock('grouplist');
-$groups = $objRightsAdminPerm->getGroups();
+$groups = $admin->perm->getGroups();
 foreach($groups as $group) {
-    $tpl->setVariable(array('group'     => $group['name'],
+    $tpl->setVariable(array('group'     => $group['group_define_name'],
                             'group_box' => getGroupCheckBox($group['group_id'],getPermUserId($_GET['edit']))));
     $tpl->parseCurrentBlock();
 }
@@ -171,23 +171,23 @@ function getGroupCheckBox($group_id, $user_id)
     if (isInGroup($group_id, $user_id)) {
         $checked = 'checked="checked"';
     }
-    if ($level > 1 && $checked) {
-        return '*';
-    }
+#    if ($level > 1 && $checked) {
+#        return '*';
+#    }
     return '<input name="groups[]" type="checkbox" value="'.$group_id.'" '.$checked.' />';
 }
 
 function isInGroup($group_id, $user_id)
 {
-    global $objRightsAdminPerm;
-    return $objRightsAdminPerm->getGroups(array('where_group_id'=>$group_id,
+    global $admin;
+    return $admin->perm->getGroups(array('where_group_id'=>$group_id,
                                                 'where_user_id'=>$user_id));
 }
 
 function setGroups($user_id, $newGroups = array())
 {
-    global $objRightsAdminPerm;
-    $groups = $objRightsAdminPerm->getGroups(array('where_user_id'=>$user_id));        
+    global $admin;
+    $groups = $admin->perm->getGroups(array('where_user_id'=>$user_id));        
     foreach ($groups as $group) {
         $objRightsAdminPerm->removeUserFromGroup($user_id,$group['group_id']);
     }
@@ -199,8 +199,8 @@ function setGroups($user_id, $newGroups = array())
 }
 
 function getPermUserId($user_id) {
-    global $objRightsAdminPerm;
-    $users = $objRightsAdminPerm->getUsers($filters);
+    global $admin;
+    $users = $admin->getUsers();
     foreach ($users as $user) {
         if ($user['auth_user_id']==$user_id) {
             return $user['perm_user_id'];

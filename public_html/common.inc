@@ -18,37 +18,22 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: common.inc,v 1.4 2004/10/28 10:37:06 goetsch Exp $
+ *   $Id: common.inc,v 1.5 2005/04/19 16:57:23 cbleek Exp $
  */
+require_once 'define.inc';
 require_once 'config.inc';
 include_once 'i18n.inc';
-require_once 'LiveUser/Admin/Perm/Container/DB_Medium.php';
-require_once 'LiveUser/Admin/Auth/Container/DB.php';
-require_once 'LiveUser/Perm/Container/DB/Medium.php';
+require_once 'LiveUser.php';
+require_once 'LiveUser/Admin.php';
 require_once 'HTML/TreeMenu.php';
 
 
 $lu_dsn = array('dsn' => $dsn);
 
-$objRightsAdminAuth = new
-    LiveUser_Admin_Auth_Container_DB($conf['authContainers'][0]);
-
-$objRightsAdminPerm = new
-    LiveUser_Admin_Perm_Container_DB_Medium($conf['permContainer']);
-
-   
-if (!$objRightsAdminPerm->init_ok) {
-    die('impossible to initialize' . $objRightsAdminPerm->getMessage());
-}
-
+error_reporting(E_ALL);
 
 define('HRADMIN',4);
 define('HRADMIN_ADMIN',3);
-$objRightsAdminPerm->setCurrentLanguage('DE');
-$objRightsAdminPerm->outputRightsConstants(array('prefix'       =>'HRADMIN_RIGHT',
-                                                 'area'         => HRADMIN_ADMIN,
-                                                 'application'  => HRADMIN),'php');
-
 
 if (isset($_GET['app_id']) && !$_GET['app_id']=='') {
     $current_application_id = $_GET['app_id'];
@@ -84,11 +69,6 @@ if (!$usr->isLoggedIn()) {
     $tpl->show();
     exit;
 } 
-
-$objRightsPerm = $usr->getPermContainer();
-if (!$objRightsPerm->init_ok) {
-    die('impossible to initialize' . $objRightsPerm->getMessage());
-}
 
 $level = 0;
 
@@ -130,15 +110,15 @@ function getPath() {
 }
 
 function getApplicationName($app_id) {
-    global $objRightsAdminPerm;
-    $apps = $objRightsAdminPerm->getApplications(array('where_application_id'=>$app_id));
-    return '<a href="application.php?edit='.$app_id.'">'.$apps[0]['name'].'</a>';
+    global $admin;
+    $apps = $admin->perm->getApplications(array('where_application_id'=>$app_id));
+    return '<a href="application.php?edit='.$app_id.'">'.$apps[0]['application_define_name'].'</a>';
 }
 
 function getAreaName($area_id) {
-    global $objRightsAdminPerm;
-    $areas = $objRightsAdminPerm->getAreas(array('where_area_id'=>$area_id));
-    return '<a href="area.php?edit='.$area_id.'&'.getAppIdParameter().'">'.$areas[$area_id]['name'].'</a>';
+    global $admin;
+    $areas = $admin->perm->getAreas(array('where_area_id'=>$area_id));
+    return '<a href="area.php?edit='.$area_id.'&'.getAppIdParameter().'">'.$areas[$area_id]['area_define_name'].'</a>';
 }
 
 function checkRights($right) {

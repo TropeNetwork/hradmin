@@ -18,11 +18,13 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: config.inc,v 1.3 2004/11/04 09:04:04 goetsch Exp $
+ *   $Id: config.inc,v 1.4 2005/04/19 16:57:23 cbleek Exp $
  */
 require_once 'Config.php';
 require_once 'DB.php';
+require_once 'Var_Dump.php';
 require_once 'LiveUser.php';
+require_once 'LiveUser/Admin.php';
 
 $conf = new Config;
 $root =& $conf->parseConfig(dirname(__FILE__).'/../config/config.xml', 'XML');
@@ -101,9 +103,18 @@ $conf =
             )
         ),
         'permContainer' => array(
-            'dsn'        => $dsn,
-            'type'       => 'DB_Medium',
-            'prefix'     => 'liveuser_',
+            'type'       => 'Medium',
+            'storage'    => array(
+                   'DB' => array(
+                      'connection' => $db,
+                      'dsn' => $dsn,
+                      'prefix' => 'liveuser_',
+                      'tables' => array(),
+                      'fields' => array(),
+                      'alias' => array(),
+                      // 'force_seq' => false
+                  ),
+            ),
             'groupTableCols' => array(
                      'required' => array(
                         'group_id'          => array('type' => 'integer', 'name' => 'group_id'),
@@ -120,24 +131,20 @@ $conf =
         )
     );
 
-function logOut()
-{
-}
-
-function logIn()
-{
-}
-
-PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-
-$usr = LiveUser::singleton($conf);
-$usr->setLoginFunction('logIn');
-$usr->setLogOutFunction('logOut');
 
 
-$e = $usr->init();
-if (PEAR::isError($e)) {
-//var_dump($usr);
-    die($e->getMessage() . ' ' . $e->getUserinfo());
-}
+$usr = LiveUser::factory($conf);
+$handle = isset($_REQUEST['handle']) ? $_REQUEST['handle'] : null;
+$password = isset($_REQUEST['passwd']) ? $_REQUEST['passwd'] : null;
+$logout = isset($_REQUEST['logout']) ? $_REQUEST['logout'] : null;
+$usr->init($handle, $password, $logout);
 
+$admin =& LiveUser_Admin::factory($conf);
+$logconf = array('mode' => 0666, 'timeFormat' => '%X %x');
+$logger = &Log::factory('file', 'liveuser_test.log', 'ident', $logconf);
+$admin->addErrorLog($logger);
+$admin->setAdminContainers();
+
+#var_dump::display($admin);
+
+?>

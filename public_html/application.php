@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: application.php,v 1.4 2004/10/28 10:37:06 goetsch Exp $
+ *   $Id: application.php,v 1.5 2005/04/19 16:57:23 cbleek Exp $
  */
  
 require_once 'HTML/QuickForm.php';
@@ -49,11 +49,12 @@ if ($edit) {
         $form->addElement('submit', 'submit', _("Save"));
     }
     
-    $apps = $objRightsAdminPerm->getApplications(array('where_application_id'=>$_GET['edit']));
+    $apps = $admin->perm->getApplications(array('application_id' => $_GET['edit'],
+                                                'fields'         => array('application_id','name','description','apllication_define_name')));
     $current_application_id         = $apps[0]['application_id'];
     $defaultValues['name']          = $apps[0]['name'];
     $defaultValues['description']   = $apps[0]['description'];
-    $defaultValues['define']        = $apps[0]['define_name'];
+    $defaultValues['define']        = $apps[0]['application_define_name'];
     $form->addElement('hidden', 'id', $_GET['edit']);
     
     $form->setDefaults($defaultValues);

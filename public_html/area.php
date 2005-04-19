@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: area.php,v 1.4 2004/10/28 10:37:06 goetsch Exp $
+ *   $Id: area.php,v 1.5 2005/04/19 16:57:23 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -55,11 +55,15 @@ if ($edit) {
         $form->addElement('submit', 'delete', _("Delete"));
     }
     
-    $areas = $objRightsAdminPerm->getAreas(array('where_application_id' => $_GET['app_id'],
-                                                 'where_area_id'        => $_GET['edit']));
+    $areas = $admin->perm->getAreas(array('where_application_id' => $_GET['app_id'],
+                                          'fields'               => array('area_id', 'name', 'description','area_define_name'),
+                                          'where_area_id'        => $_GET['edit']));
+
+
+
     $defaultValues['name']          = $areas[$_GET['edit']]['name'];
     $defaultValues['description']   = $areas[$_GET['edit']]['description'];
-    $defaultValues['define']        = $areas[$_GET['edit']]['define_name'];
+    $defaultValues['define']        = $areas[$_GET['edit']]['area_define_name'];
     $form->addElement('hidden', 'id', $_GET['edit']);
     $form->setDefaults($defaultValues);
 } else {

@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: groups.php,v 1.4 2004/10/28 10:37:06 goetsch Exp $
+ *   $Id: groups.php,v 1.5 2005/04/19 16:57:23 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -31,7 +31,8 @@ if (!checkRights(HRADMIN_RIGHT_GROUPS)) {
 }
 
 
-$groups = $objRightsAdminPerm->getGroups(array('with_rights'=>true ));
+$groups = $admin->perm->getGroups(array('with_rights'=>true,
+                                        'fields'     => array("group_define_name", "description", "name", "group_id")));
 
 $tpl->addBlockfile('contentmain', 'groups', 'grouplist.html');
 $tpl->setCurrentBlock('grouplist');

@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: skin.inc,v 1.4 2004/11/04 09:04:04 goetsch Exp $
+ *   $Id: skin.inc,v 1.5 2005/04/19 16:57:23 cbleek Exp $
  */
 require_once 'HTML/Template/Sigma.php';
 require_once 'layersmenu/lib/PHPLIB.php';
@@ -42,22 +42,22 @@ $tpl->setVariable('layersmenu',$mid->getMenu('hormenu1'));
 $tpl->setVariable('layersmenu_footer',$mid->getFooter());
 
 function getMenuString() {
-    global $objRightsAdminPerm;
+    global $admin;
     $menu = ".|".gettext("Home")."|index.php|".gettext("Home")."|home.png\n";
     $menu .= ".|".gettext("Applications")."|applications.php|".gettext("Applications")."|\n";
-    $apps = $objRightsAdminPerm->getApplications();
+    $apps = $admin->perm->getApplications();
     foreach($apps as $app) {
-        $menu .= "..|".$app['name']."|application.php?edit=".$app['application_id']."||\n";
-        $areas = $objRightsAdminPerm->getAreas(array('where_application_id'=>$app['application_id'] ));
+        $menu .= "..|".$app['application_define_name']."|application.php?edit=".$app['application_id']."||\n";
+        $areas = $admin->perm->getAreas(array('where_application_id'=>$app['application_id'] ));
         $menu .= "...|".gettext("Areas")."|areas.php?app_id=".$app['application_id']."|".gettext("Areas")."|\n";
         $menu .= "...|---|||\n";
         foreach($areas as $area) {
-            $menu .= "...|".$area['name']."|area.php?edit=".$area['area_id']."&amp;app_id=".$app['application_id']."||\n";
+            $menu .= "...|".$area['area_define_name']."|area.php?edit=".$area['area_id']."&amp;app_id=".$app['application_id']."||\n";
             $menu .= "....|".gettext("Rights")."|rights.php?area_id=".$area['area_id']."&amp;app_id=".$app['application_id']."|".gettext("Rights")."|\n";
             $menu .= "....|---|||\n";
-            $rights = $objRightsAdminPerm->getRights(array('where_area_id'=> $area['area_id']));
+            $rights = $admin->perm->getRights(array('where_area_id'=> $area['area_id']));
             foreach($rights as $right) {
-                $menu .= "....|".$right['name']."|right.php?edit=".$right['right_id']."&amp;app_id=".$app['application_id']."&amp;area_id=".$area['area_id']."||\n";
+                $menu .= "....|".$right['right_define_name']."|right.php?edit=".$right['right_id']."&amp;app_id=".$app['application_id']."&amp;area_id=".$area['area_id']."||\n";
             }
         }
     }

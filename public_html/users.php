@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: users.php,v 1.4 2004/10/28 10:37:06 goetsch Exp $
+ *   $Id: users.php,v 1.5 2005/04/19 16:57:24 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -31,7 +31,7 @@ if (!checkRights(HRADMIN_RIGHT_USERS)) {
 
 $tpl->addBlockfile('contentmain', 'users', 'userlist.html');
 $tpl->setCurrentBlock('userlist');
-$users = $objRightsAdminAuth->getUsers(null,'name');
+$users = $admin->getUsers('auth');
 foreach($users as $user) {
     $tpl->setVariable(array('login'   => '<a href="user.php?edit='.$user['auth_user_id'].'">'.$user['handle'].'</a>',
                             'name'     => $user['name'],
