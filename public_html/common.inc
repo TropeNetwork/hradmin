@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: common.inc,v 1.5 2005/04/19 16:57:23 cbleek Exp $
+ *   $Id: common.inc,v 1.6 2005/04/21 14:11:37 cbleek Exp $
  */
 require_once 'define.inc';
 require_once 'config.inc';
@@ -111,13 +111,13 @@ function getPath() {
 
 function getApplicationName($app_id) {
     global $admin;
-    $apps = $admin->perm->getApplications(array('where_application_id'=>$app_id));
+    $apps = $admin->perm->getApplications(array('filter'=>array('application_id'=>$app_id)));
     return '<a href="application.php?edit='.$app_id.'">'.$apps[0]['application_define_name'].'</a>';
 }
 
 function getAreaName($area_id) {
     global $admin;
-    $areas = $admin->perm->getAreas(array('where_area_id'=>$area_id));
+    $areas = $admin->perm->getAreas(array('filter' => array( 'area_id'=>$area_id)));
     return '<a href="area.php?edit='.$area_id.'&'.getAppIdParameter().'">'.$areas[$area_id]['area_define_name'].'</a>';
 }
 

@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: config.inc,v 1.5 2005/04/21 08:45:33 cbleek Exp $
+ *   $Id: config.inc,v 1.6 2005/04/21 14:11:37 cbleek Exp $
  */
 require_once 'Config.php';
 require_once 'DB.php';
@@ -119,7 +119,7 @@ $conf =
             'groupTableCols' => array(
                      'required' => array(
                         'group_id'          => array('type' => 'integer', 'name' => 'group_id'),
-                        'group_define_name' => array('type' => 'text', 'name' => 'group_define_name'),
+                        'group_define_name' => array('type' => 'text',    'name' => 'group_define_name'),
                      ),
                      'optional' => array(
                         'is_active'      => array('type' => 'boolean',   'name' => 'is_active'),

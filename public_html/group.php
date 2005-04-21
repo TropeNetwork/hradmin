@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: group.php,v 1.6 2005/04/21 08:45:33 cbleek Exp $
+ *   $Id: group.php,v 1.7 2005/04/21 14:11:37 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -55,10 +55,18 @@ if ($edit) {
     
     $groups = $admin->perm->getGroups(array('filters'  => array('group_id' => $_GET['edit']),
                                             'fields'   => array('group_id','description','name','group_define_name')));
-                                            
+                                       
     $defaultValues['name']          = $groups[0]['name'];
     $defaultValues['define']        = $groups[0]['group_define_name'];
     $defaultValues['description']   = $groups[0]['description'];
+    
+    $params = array(
+        'fields'  => array('right_id'),
+        'filters' => array('group_id' => $_GET['edit'])
+                  );
+                  
+    $group_rights = $admin->perm->getRights($params);
+    
     $form->addElement('hidden', 'id', $_GET['edit']);
     
     $form->setDefaults($defaultValues);
@@ -70,19 +78,24 @@ $tpl->addBlockfile('contentmain', 'group', 'editgroup.html');
 
 // right stuff
 $tpl->setCurrentBlock('rightlist');
-$apps = $admin->perm->getApplications();
-$groupRights = getGroupRight($_GET['edit']);
+$apps = $admin->perm->getApplications(array('fields' => array('application_id', 'name', 'description','application_define_name')));
+
 foreach($apps as $app) {
-    $areas = $admin->perm->getAreas(array('application_id' => $app['application_id'] ));
+
+    $areas = $admin->perm->getAreas(array('fields' => array('area_id', 'name', 'description','area_define_name'),
+                                          'filter '=> array('application_id' => $app['application_id'] )));
+
     foreach($areas as $area) {
-        $rights = $admin->perm->getRights(array('application_id' => $app['application_id'],
-                                                       'area_id' => $area['area_id'] ));
+        $rights = $admin->perm->getRights(array('filter' => array('application_id' => $app['application_id'],
+                                                            'area_id'        => $area['area_id'] ),
+                                                'fields' => array('name')));
         foreach($rights as $right) {
             $tpl->setVariable(array('application'   => $app['name'],
                                     'area'          => $area['name'],
                                     'right'         => $right['name'],
-                                    'right_box'     => getRightLevelBox($right['right_id'],$groupRights)));
+                                    'right_box'     => getRightLevelBox($right['right_id'],$group_rights)));
             $tpl->parseCurrentBlock();
+            var_dump::display($right);
         }
     }
 }
@@ -162,14 +175,6 @@ function getRightLevelBox($right_id, $rights = array())
 function hasGroupRight($right_id,$rights = array())  
 {
     return $rights[$right_id];
-}
-
-function getGroupRight($group_id) 
-{
-    global $admin;    
-    $admin->groupIds = array ((int)$group_id); 
-    $admin->perm->readGroupRights();
-    return $objRightsPerm->groupRights;    
 }
 
 function setGroupRights($group_id,$newRights = array()) {

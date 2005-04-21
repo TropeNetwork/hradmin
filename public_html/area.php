@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: area.php,v 1.5 2005/04/19 16:57:23 cbleek Exp $
+ *   $Id: area.php,v 1.6 2005/04/21 14:11:37 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -55,15 +55,13 @@ if ($edit) {
         $form->addElement('submit', 'delete', _("Delete"));
     }
     
-    $areas = $admin->perm->getAreas(array('where_application_id' => $_GET['app_id'],
-                                          'fields'               => array('area_id', 'name', 'description','area_define_name'),
-                                          'where_area_id'        => $_GET['edit']));
+    $areas = $admin->perm->getAreas(array('filter' => array('application_id' => $_GET['app_id'],
+                                                            'area_id'        => $_GET['edit']),
+                                          'fields' => array('area_id', 'name', 'description', 'area_define_name')));
 
-
-
-    $defaultValues['name']          = $areas[$_GET['edit']]['name'];
-    $defaultValues['description']   = $areas[$_GET['edit']]['description'];
-    $defaultValues['define']        = $areas[$_GET['edit']]['area_define_name'];
+    $defaultValues['name']          = $areas[0]['name'];
+    $defaultValues['description']   = $areas[0]['description'];
+    $defaultValues['define']        = $areas[0]['area_define_name'];
     $form->addElement('hidden', 'id', $_GET['edit']);
     $form->setDefaults($defaultValues);
 } else {

@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: applications.php,v 1.5 2005/04/19 16:57:23 cbleek Exp $
+ *   $Id: applications.php,v 1.6 2005/04/21 14:11:37 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -32,7 +32,6 @@ if (!checkRights(HRADMIN_RIGHT_APPLICATIONS)) {
 
 $apps = $admin->perm->getApplications(array('fields' => array('application_id', 'name', 'description','application_define_name')));
   
-
 $tpl->addBlockfile('contentmain', 'applications', 'applicationlist.html');
 $tpl->setCurrentBlock('applicationlist');
 foreach($apps as $app) {

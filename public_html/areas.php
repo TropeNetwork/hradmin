@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: areas.php,v 1.5 2005/04/19 16:57:23 cbleek Exp $
+ *   $Id: areas.php,v 1.6 2005/04/21 14:11:37 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -32,8 +32,8 @@ if (!checkRights(HRADMIN_RIGHT_AREAS)) {
 
 checkApplication();
 
-$areas = $admin->perm->getAreas(array('fields'              => array('area_id', 'name', 'description','area_define_name')),
-                                      'where_application_id'=>$current_application_id );
+$areas = $admin->perm->getAreas(array('fields' => array('area_id', 'name', 'description','area_define_name'),
+                                      'filter' => array('application_id' => $_GET['app_id'] )));
 
 $tpl->addBlockfile('contentmain', 'areas', 'arealist.html');
 $tpl->setCurrentBlock('arealist');

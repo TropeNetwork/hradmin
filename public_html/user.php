@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: user.php,v 1.6 2005/04/21 08:45:33 cbleek Exp $
+ *   $Id: user.php,v 1.7 2005/04/21 14:11:37 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -38,9 +38,7 @@ $form = new HTML_QuickForm('edit','POST');
 $form->addElement('text', 'login', _("Login"));
 $tpl->setVariable(array('maxlength'=>'10',
                   'class'=>'formFieldLong'));
-                  
-                
-                  
+                                    
 $form->addElement('text', 'name', _("Name"));
 $tpl->setVariable(array('maxlength'=>'100',
                   'class'=>'formFieldLong'));
@@ -48,15 +46,14 @@ $tpl->setVariable(array('maxlength'=>'100',
 $form->addElement('text','email', _("Email"),
             array('maxlength'=>'100',
                   'class'=>'formFieldLong'));
-      
 
-    $form->addElement('password', 'password', _("Password"));
-    $tpl->setVariable(array('maxlength'=>'10',
-                            'class'=>'formFieldLong'));
+$form->addElement('password', 'password', _("Password"));
+$tpl->setVariable(array('maxlength'=>'10',
+                        'class'=>'formFieldLong'));
                   
-    $form->addElement('password', 'password2', _("Repeat password"));
-    $tpl->setVariable(array('maxlength'=>'10',
-                            'class'=>'formFieldLong'));  
+$form->addElement('password', 'password2', _("Repeat password"));
+$tpl->setVariable(array('maxlength'=>'10',
+                         'class'=>'formFieldLong'));  
 
 if ($edit || $delete) {
     if ($level>1) {
@@ -86,20 +83,20 @@ $tpl->setCurrentBlock('grouplist');
 $groups = $admin->perm->getGroups();
 foreach($groups as $group) {
     $tpl->setVariable(array('group'     => $group['group_define_name'],
-                            'group_box' => getGroupCheckBox($group['group_id'],getPermUserId($_GET['edit']))));
+                            'group_box' => getGroupCheckBox($group['group_id'],@$_GET['edit'])));
     $tpl->parseCurrentBlock();
 }
 
 // form rules
 $form->addRule('login', _("Username is required!"), 'required');
 if (!$delete) {
-$form->addRule('name', _("Name is required!"), 'required');
-$form->addRule('email', _("Email is required!"), 'required');
-if (!$edit) {
-    $form->addRule('password', _("Password is required!"), 'required');
-    $form->addRule('password2', _("Password is required!"), 'required');
-}
-$form->addRule(array('password', 'password2'), _("Passwords does not match!"), 'compare', null, 'client');
+    $form->addRule('name', _("Name is required!"), 'required');
+    $form->addRule('email', _("Email is required!"), 'required');
+    if (!$edit) {
+        $form->addRule('password', _("Password is required!"), 'required');
+        $form->addRule('password2', _("Password is required!"), 'required');
+    }
+    $form->addRule(array('password', 'password2'), _("Passwords does not match!"), 'compare', null, 'client');
 }
 if ($level < 2) {
     $form->freeze();
@@ -112,22 +109,15 @@ if ($form->validate()) {
         'email' => $form->exportValue("email")
     ); 
     if ($delete) {
-        $res = $objRightsAdminPerm->removeUser(getPermUserId($form->exportValue('id')));
-        if (PEAR::isError($res)) {
-            die($res->getMessage());            
-        }
-        $res = $objRightsAdminAuth->removeUser($form->exportValue('id'));    
-        if (PEAR::isError($res)) {
-            die($res->getMessage());            
-        }    
+        $res = $admin->removeUser(getPermUserId($form->exportValue('id')));
         header("Location: users.php");
         exit;
-    } elseif ($edit && $level>1) {
+    } elseif (isset($_POST['id']) && $_POST['id']>0 && $level>1) {
         $pass = null;
         if ($form->exportValue("password")) {
             $pass = $form->exportValue("password");
         }
-        $objRightsAdminAuth->updateUser(
+        $admin->updateUser(
             $form->exportValue('id'), 
             $form->exportValue("login"), 
             $pass, 
@@ -138,18 +128,13 @@ if ($form->validate()) {
         setGroups(getPermUserId($form->exportValue('id')),$_POST['groups']);
         header("Location: users.php");
     } elseif ($level>2) {
-        $user_id = $objRightsAdminAuth->addUser($_POST["login"], $_POST["password"], true, null, null, null, $custom);
+        $user_id = $admin->addUser($_POST["login"], $_POST["password"], true, $custom, null, null);
+        
         if (DB::isError($user_id)) {
-            var_dump($user_id);
+            var_dump::display($user_id);
         } else {
-            $perm_id = $objRightsAdminPerm->addUser($user_id,0);
-            if (DB::isError($perm_id)) {
-                var_dump($perm_id);
-                $objRightsAdminAuth->removeUser($user_id);
-            } else {
                 setGroups($perm_id,$_POST['groups']);
                 header("Location: users.php");
-            }
         }
     }    
     exit;
@@ -167,32 +152,34 @@ $tpl->show();
 function getGroupCheckBox($group_id, $user_id) 
 {
     $checked = '';
-    if (isInGroup($group_id, $user_id)) {
+    $inGroup =isInGroup($group_id, $user_id);
+    if (!empty($inGroup)) {
         $checked = 'checked="checked"';
     }
-#    if ($level > 1 && $checked) {
-#        return '*';
-#    }
     return '<input name="groups[]" type="checkbox" value="'.$group_id.'" '.$checked.' />';
 }
 
 function isInGroup($group_id, $user_id)
 {
     global $admin;
-    return $admin->perm->getGroups(array('where_group_id'=>$group_id,
-                                                'where_user_id'=>$user_id));
+    return $admin->perm->getGroups(array('filters'=>array('group_id'=>$group_id,
+                                                         'perm_user_id'=>$user_id)));
 }
 
 function setGroups($user_id, $newGroups = array())
 {
     global $admin;
-    $groups = $admin->perm->getGroups(array('where_user_id'=>$user_id));        
+    $groups = $admin->perm->getGroups();        
     foreach ($groups as $group) {
-        $objRightsAdminPerm->removeUserFromGroup($user_id,$group['group_id']);
+        $filters = array(
+            'group_id'     => $group,
+            'perm_user_id' => $user_id
+                );
+        $removed = $admin->perm->removeUserFromGroup($filters);             
     }
     if (!empty($newGroups)) {
         foreach ($newGroups as $newGroup) {
-            $objRightsAdminPerm->addUserToGroup($user_id,$newGroup);
+            $result = $admin->perm->addUserToGroup(array('perm_user_id' => $user_id, 'group_id' => $newGroup));
         }
     }
 }

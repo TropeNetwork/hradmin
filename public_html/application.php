@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: application.php,v 1.6 2005/04/21 08:45:33 cbleek Exp $
+ *   $Id: application.php,v 1.7 2005/04/21 14:11:36 cbleek Exp $
  */
  
 require_once 'HTML/QuickForm.php';
@@ -66,15 +66,35 @@ $form->addRule('name', _("Name is required!"), 'required');
 if ($level<2) {
     $form->freeze();   
 }
+
 if ($form->validate()) {
-    if ($edit && $level>1) {
-        $objRightsAdminPerm->updateApplication($_POST['id'],$_POST['define'],$_POST['name'], $_POST['description']);
+    if (isset($_POST['id']) && $_POST['id']>0 && $level>1) {
+        $data      = array('application_define_name' => $_POST['define'], 'name' => $_POST['name'], 'description' => $_POST['description']);
+        $filters   = array('application_id' => $_POST['id']);
+        $updateApp = $admin->perm->updateApplication($data, $filters);
+
+        $filters   = array('section_id'=>$_POST['id'],'section_type' => LIVEUSER_SECTION_APPLICATION, 'language_id'=>0);
+        $data      = array('name' => $_POST['name'], 'description'  => $_POST['description']);
+                
+        $admin->perm->updateTranslation($data,$filters); 
+
         header("Location: applications.php");        
     } elseif($level>2) {
-        $app_id = $objRightsAdminPerm->addApplication($_POST['define'],$_POST['name'], $_POST['description']);
-        if (DB::isError($group_id)) {
-            var_dump($group_id);
+        $data = array('application_define_name' => $_POST['define']);
+        $app_id = $admin->perm->addApplication($data);
+
+        if (DB::isError($app_id)) {
+            var_dump($app_id);
         } else {
+            $data = array(
+                'section_id'   => $app_id,
+                'section_type' => LIVEUSER_SECTION_APPLICATION,
+                'language_id'  => '0',
+                'name'         => $_POST['name'],
+                'description'  => $_POST['description']);
+                
+            $admin->perm->addTranslation($data); 
+
             header("Location: applications.php");
         }
     }
