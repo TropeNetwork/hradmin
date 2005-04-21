@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: group.php,v 1.7 2005/04/21 14:11:37 cbleek Exp $
+ *   $Id: group.php,v 1.8 2005/04/21 15:44:02 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -54,7 +54,10 @@ if ($edit) {
     }
     
     $groups = $admin->perm->getGroups(array('filters'  => array('group_id' => $_GET['edit']),
-                                            'fields'   => array('group_id','description','name','group_define_name')));
+                                            'fields'   => array('group_id',
+                                                                'description',
+                                                                'name',
+                                                                'group_define_name')));
                                        
     $defaultValues['name']          = $groups[0]['name'];
     $defaultValues['define']        = $groups[0]['group_define_name'];
@@ -67,6 +70,8 @@ if ($edit) {
                   
     $group_rights = $admin->perm->getRights($params);
     
+    var_dump::display($group_rights);
+    
     $form->addElement('hidden', 'id', $_GET['edit']);
     
     $form->setDefaults($defaultValues);
@@ -78,24 +83,29 @@ $tpl->addBlockfile('contentmain', 'group', 'editgroup.html');
 
 // right stuff
 $tpl->setCurrentBlock('rightlist');
-$apps = $admin->perm->getApplications(array('fields' => array('application_id', 'name', 'description','application_define_name')));
+$apps = $admin->perm->getApplications(array('fields' => array('application_id', 
+                                                              'name', 
+                                                              'description',
+                                                              'application_define_name')));
 
 foreach($apps as $app) {
 
-    $areas = $admin->perm->getAreas(array('fields' => array('area_id', 'name', 'description','area_define_name'),
-                                          'filter '=> array('application_id' => $app['application_id'] )));
+    $areas = $admin->perm->getAreas(array('fields' => array('area_id', 
+                                                            'name', 
+                                                            'description',
+                                                            'area_define_name'),
+                                          'filters '=> array('application_id' => $app['application_id'] )));
 
     foreach($areas as $area) {
-        $rights = $admin->perm->getRights(array('filter' => array('application_id' => $app['application_id'],
-                                                            'area_id'        => $area['area_id'] ),
-                                                'fields' => array('name')));
+        $rights = $admin->perm->getRights(array('filters' => array('application_id' => $app['application_id'],
+                                                                   'area_id'        => $area['area_id'] ),
+                                                'fields' => array('name','right_id')));
         foreach($rights as $right) {
             $tpl->setVariable(array('application'   => $app['name'],
                                     'area'          => $area['name'],
                                     'right'         => $right['name'],
                                     'right_box'     => getRightLevelBox($right['right_id'],$group_rights)));
             $tpl->parseCurrentBlock();
-            var_dump::display($right);
         }
     }
 }
@@ -107,22 +117,29 @@ if ($level < 2) {
 
 if ($form->validate()) {
     if ($delete) {
-        $objRightsAdminPerm->removeGroup($form->exportValue('id'));
+        $admin->perm->removeGroup(array('group_id' => $form->exportValue('id'),
+                                        'recursive' => true ));
         header("Location: groups.php");
-    } elseif ($edit && $level>1) {
-        $objRightsAdminPerm->updateGroup(
-            $form->exportValue('id'),
-            $form->exportValue("name"),
-            $form->exportValue("description"), 
-            $form->exportValue("define"),
-            array(
-                'is_active' => 'Y'
-            )
-        );
-        setGroupRights($form->exportValue('id'),$_POST['rights']);
+    } elseif ( $form->exportValue('id') >0 && $level>1) {
+
+        $data   = array('group_define_name'=>$form->exportValue("define"));
+        $filter = array('group_id'=>$form->exportValue('id'));
+        $admin->perm->updateGroup($data,$filter);
+        
+        
+        $filter = array('section_id'   => $form->exportValue('id'),
+                        'section_type' => LIVEUSER_SECTION_GROUP, 
+                        'language_id'  =>0);
+        $data   = array('name'         => $form->exportValue("name"), 
+                        'description'  => $form->exportValue("description"));
+                
+        $admin->perm->updateTranslation($data,$filter);
+                    
+        
+        setGroupRights($form->exportValue('id'),$form->exportValue('rights'));
         header("Location: groups.php");
     } elseif ($level>2) {  
-        $group_id = $objRightsAdminPerm->addGroup(
+        $group_id = $admin->perm->addGroup(
             $form->exportValue("name"),
             $form->exportValue("description"),            
             $form->exportValue("define"),

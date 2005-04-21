@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: application.php,v 1.7 2005/04/21 14:11:36 cbleek Exp $
+ *   $Id: application.php,v 1.8 2005/04/21 15:44:01 cbleek Exp $
  */
  
 require_once 'HTML/QuickForm.php';
@@ -69,7 +69,9 @@ if ($level<2) {
 
 if ($form->validate()) {
     if (isset($_POST['id']) && $_POST['id']>0 && $level>1) {
-        $data      = array('application_define_name' => $_POST['define'], 'name' => $_POST['name'], 'description' => $_POST['description']);
+        $data      = array('application_define_name' => $_POST['define'], 
+                           'name'                    => $_POST['name'], 
+                           'description'             => $_POST['description']);
         $filters   = array('application_id' => $_POST['id']);
         $updateApp = $admin->perm->updateApplication($data, $filters);
 

@@ -1,6 +1,0 @@
-.|Home|index.php|Home|home.png
-..|Test|||
-.|Anwendungen|applications.php||
-.|Benutzer|users.php||
-.|Gruppen|groups.php||
-.|Hilfe|||

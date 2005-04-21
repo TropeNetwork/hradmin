@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: skin.inc,v 1.5 2005/04/19 16:57:23 cbleek Exp $
+ *   $Id: skin.inc,v 1.6 2005/04/21 15:44:02 cbleek Exp $
  */
 require_once 'HTML/Template/Sigma.php';
 require_once 'layersmenu/lib/PHPLIB.php';
@@ -31,7 +31,7 @@ $tpl->setCallbackFunction('gettext','gettext');
 $layersmenu = '<script language="JavaScript" type="text/javascript" src="layersmenu/libjs/layersmenu-library.js"></script>'."\n";
 $layersmenu .= '<script language="JavaScript" type="text/javascript" src="layersmenu/libjs/layersmenu.js"></script>'."\n";
 $mid = new LayersMenu(6, 7, 2, 1);
-//$mid->setMenuStructureFile('menu.txt');
+
 $mid->setMenuStructureString(getMenuString());
 $mid->setIconsize(16, 16);
 $mid->parseStructureForMenu('hormenu1');
@@ -48,14 +48,15 @@ function getMenuString() {
     $apps = $admin->perm->getApplications();
     foreach($apps as $app) {
         $menu .= "..|".$app['application_define_name']."|application.php?edit=".$app['application_id']."||\n";
-        $areas = $admin->perm->getAreas(array('where_application_id'=>$app['application_id'] ));
+        $areas = $admin->perm->getAreas(array('filters'=>array('application_id'=>$app['application_id'] )));
         $menu .= "...|".gettext("Areas")."|areas.php?app_id=".$app['application_id']."|".gettext("Areas")."|\n";
         $menu .= "...|---|||\n";
         foreach($areas as $area) {
             $menu .= "...|".$area['area_define_name']."|area.php?edit=".$area['area_id']."&amp;app_id=".$app['application_id']."||\n";
             $menu .= "....|".gettext("Rights")."|rights.php?area_id=".$area['area_id']."&amp;app_id=".$app['application_id']."|".gettext("Rights")."|\n";
             $menu .= "....|---|||\n";
-            $rights = $admin->perm->getRights(array('where_area_id'=> $area['area_id']));
+            $rights = $admin->perm->getRights(array('filters'=>array('area_id'=> $area['area_id'],
+                                                                    'application_id' => $app['application_id'])));
             foreach($rights as $right) {
                 $menu .= "....|".$right['right_define_name']."|right.php?edit=".$right['right_id']."&amp;app_id=".$app['application_id']."&amp;area_id=".$area['area_id']."||\n";
             }

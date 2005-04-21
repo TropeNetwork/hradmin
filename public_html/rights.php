@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: rights.php,v 1.5 2005/04/21 14:11:37 cbleek Exp $
+ *   $Id: rights.php,v 1.6 2005/04/21 15:44:02 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -32,7 +32,9 @@ if (!checkRights(HRADMIN_RIGHT_RIGHTS)) {
 checkApplication();
 checkArea();
 
-$rights = $admin->perm->getRights(array('fields'=>array('right_define_name','name','description')));
+$rights = $admin->perm->getRights(array('fields'  => array('right_define_name','name','right_id','description'),
+                                        'filters' => array('application_id'=> $_GET['app_id'],
+                                                           'area_id'       => $_GET['area_id'])));
   
 $tpl->addBlockfile('contentmain', 'rights', 'rightlist.html');
 $tpl->setCurrentBlock('rightlist');

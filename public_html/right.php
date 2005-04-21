@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: right.php,v 1.4 2004/10/28 10:37:06 goetsch Exp $
+ *   $Id: right.php,v 1.5 2005/04/21 15:44:02 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -57,10 +57,16 @@ if ($edit) {
         $form->addElement('submit', 'delete', _("Delete"));
     }
     
-    $rights = $objRightsAdminPerm->getRights(array('where_right_id'=>$_GET['edit']));
-    $defaultValues['name']          = $rights[$_GET['edit']]['name'];
-    $defaultValues['description']   = $rights[$_GET['edit']]['description'];
-    $defaultValues['define']        = $rights[$_GET['edit']]['define_name'];
+    $rights = $admin->perm->getRights(array('filters'=> array('right_id'       => $_GET['edit'],
+                                                              'area_id'        => $_GET['area_id'],
+                                                              'application_id' => $_GET['app_id']),
+                                            'fields' => array('right_define_name','name','description')));
+                                            
+                                            var_dump::display($rights);
+
+    $defaultValues['name']          = $rights[0]['name'];
+    $defaultValues['description']   = $rights[0]['description'];
+    $defaultValues['define']        = $rights[0]['right_define_name'];
     $form->addElement('hidden', 'id', $_GET['edit']);
     
     $form->setDefaults($defaultValues);
@@ -77,8 +83,8 @@ if ($form->validate()) {
     if ($delete && $level>2) {
         $objRightsAdminPerm->removeRight($_POST['id']);
         header("Location: rights.php?".getAppIdParameter().'&'.getAreaIdParameter());
-    } elseif ($edit && $level>1) {
-        $objRightsAdminPerm->updateRight(
+    } elseif (isset($_POST['id']) && $_POST['id']>0 && $level>1) {
+        $admin->perm->updateRight(
             $form->exportValue('id'),
             $current_area_id,
             $form->exportValue("define"),
