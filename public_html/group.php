@@ -18,17 +18,12 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: group.php,v 1.5 2005/04/19 16:57:23 cbleek Exp $
+ *   $Id: group.php,v 1.6 2005/04/21 08:45:33 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
 
 include_once 'common.inc';
-
-define ('HRADMIN_LEVEL_0',_("None"));
-define ('HRADMIN_LEVEL_1',_("Read"));
-define ('HRADMIN_LEVEL_2',_("Write"));
-define ('HRADMIN_LEVEL_3',_("Delete"));
 
 if (!checkRights(HRADMIN_RIGHT_GROUPS)) {
     header("Location: noright.php");
@@ -46,6 +41,7 @@ $tpl->setVariable(array('maxlength'=>'100',
                   'class'=>'formFieldLong'));
 
 $form->addElement('text', 'define', _("Define name"));
+
 $tpl->setVariable(array('maxlength'=>'15',
                   'class'=>'formFieldLong'));
 
@@ -57,14 +53,12 @@ if ($edit) {
         $form->addElement('submit', 'delete', _("Delete"));
     }
     
-    $groups = $admin->perm->getGroups(array('group_id' => $_GET['edit'],
+    $groups = $admin->perm->getGroups(array('filters'  => array('group_id' => $_GET['edit']),
                                             'fields'   => array('group_id','description','name','group_define_name')));
                                             
-                                            var_dump::display($groups);
-
-    $defaultValues['name']          = $groups[$_GET['edit']]['name'];
-    $defaultValues['define']        = $groups[$_GET['edit']]['group_define_name'];
-    $defaultValues['description']   = $groups[$_GET['edit']]['description'];
+    $defaultValues['name']          = $groups[0]['name'];
+    $defaultValues['define']        = $groups[0]['group_define_name'];
+    $defaultValues['description']   = $groups[0]['description'];
     $form->addElement('hidden', 'id', $_GET['edit']);
     
     $form->setDefaults($defaultValues);

@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: application.php,v 1.5 2005/04/19 16:57:23 cbleek Exp $
+ *   $Id: application.php,v 1.6 2005/04/21 08:45:33 cbleek Exp $
  */
  
 require_once 'HTML/QuickForm.php';
@@ -48,9 +48,9 @@ if ($edit) {
     if ($level>1) {
         $form->addElement('submit', 'submit', _("Save"));
     }
-    
-    $apps = $admin->perm->getApplications(array('application_id' => $_GET['edit'],
-                                                'fields'         => array('application_id','name','description','apllication_define_name')));
+
+    $apps = $admin->perm->getApplications(array('filters' => array('application_id' => $_GET['edit']),
+                                                'fields'  => array('application_id','name','description','application_define_name')));
     $current_application_id         = $apps[0]['application_id'];
     $defaultValues['name']          = $apps[0]['name'];
     $defaultValues['description']   = $apps[0]['description'];

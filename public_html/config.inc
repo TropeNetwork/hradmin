@@ -18,10 +18,11 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: config.inc,v 1.4 2005/04/19 16:57:23 cbleek Exp $
+ *   $Id: config.inc,v 1.5 2005/04/21 08:45:33 cbleek Exp $
  */
 require_once 'Config.php';
 require_once 'DB.php';
+require_once 'Log.php';
 require_once 'Var_Dump.php';
 require_once 'LiveUser.php';
 require_once 'LiveUser/Admin.php';

@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: user.php,v 1.5 2005/04/19 16:57:23 cbleek Exp $
+ *   $Id: user.php,v 1.6 2005/04/21 08:45:33 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -65,12 +65,11 @@ if ($edit || $delete) {
     if ($level>2) {
         $form->addElement('submit', 'delete', _("Delete"));
     }
-    $filters = array(
-        'auth_user_id' => array('name'  => 'auth_user_id', 
-                                'op'    => '=', 
-                                'value' => $_GET['edit'])        
-    );
-    $users = $admin->getUsers($filters);
+    
+    $filter = array(array('cond' => '', 'name' => 'auth_user_id', 'op' => '=', 'value' => $_GET['edit'], 'type' => 'text'));
+        
+    $users  = $admin->auth->getUsers($filter);
+    
     $defaultValues['login']      = $users[0]['handle'];
     $defaultValues['name']       = $users[0]['name'];
     $defaultValues['email']      = $users[0]['email'];
