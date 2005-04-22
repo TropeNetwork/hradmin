@@ -1,27 +1,30 @@
-<form {edit_attributes}>
-<table>
+<!-- BEGIN qf_error_loop -->
+<font color="red">{qf_error}</font><br />
+<!-- END qf_error_loop -->
+<form {qf_attributes}>
+<!-- BEGIN qf_hidden_block -->
+<div style="display: none;">
+<!-- BEGIN qf_hidden_loop -->
+  {qf_hidden}
+<!-- END qf_hidden_loop -->
+</div>
+<!-- END qf_hidden_block -->
+            
 
+<table>
+ <!-- BEGIN qf_main_loop -->
+ <!-- BEGIN qf_element -->
  <tr>
-  <td>{edit_id_label}</td>
-  <td>{edit_id_html}</td>
+  <td>{qf_label}:<!-- BEGIN qf_element_required --><span style="color: #FF0000;">*</span> <!-- END qf_element_required --></td>
+  <td>
+  <!-- BEGIN qf_element_error --><font size="1" color="red">{qf_error}</font><br /><!-- END qf_element_error -->
+    {qf_element}
+  </td>
  </tr>
- 
- <tr>
-  <td>{edit_name_label}:</td>
-  <td>{edit_name_html}</td>
- </tr>
- 
- <tr>
-  <td>{edit_description_label}:</td>
-  <td>{edit_description_html}</td>
- </tr>
- 
- <tr>
-  <td>{edit_define_label}:</td>
-  <td>{edit_define_html}</td>
- </tr>
+ <!-- END qf_element -->
 
  <tr><td colspan="2">
+ <!-- BEGIN qf_group -->
   <table class="list">
     <tr>
       <th colspan="8">func_gettext("Rights")</th>
@@ -32,23 +35,28 @@
       <th colspan="1">func_gettext("Right")</th>
       <th colspan="1">func_gettext("Level")</th>
     </tr>
-    <!-- BEGIN rightlist -->  
+    <!-- BEGIN qf_group_table -->
+    <!-- BEGIN qf_group_loop -->
     <tr>
         <td class="panel">{application}</td>
         <td class="panel">-></td>
         <td class="panel">{area}</td>
         <td class="panel">-></td>
         <td class="panel">{right}</td>
-        <td class="panel">{right_box}</td>
+        <td class="panel">
+            {qf_element}
+        </td>
     </tr>
-    <!-- END rightlist -->    
+    <!-- END qf_group_loop -->
+    <!-- END qf_group_table -->
   </table>
+  <!-- END qf_group -->
   </td></tr>
 
  <tr>
   <td>{edit_submit_label}</td>
   <td>{edit_submit_html}{edit_delete_html}</td>
+  <!-- END qf_main_loop -->
  </tr>
 </table>
-<br>
 
