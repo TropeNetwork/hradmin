@@ -13,6 +13,12 @@
 
 <table>
  <!-- BEGIN qf_main_loop -->
+ 
+ <!-- BEGIN qf_header -->
+ {qf_header}
+ <!-- END qf_header -->
+ 
+ 
  <!-- BEGIN qf_element -->
  <tr>
   <td>{qf_label}:<!-- BEGIN qf_element_required --><span style="color: #FF0000;">*</span> <!-- END qf_element_required --></td>
@@ -22,41 +28,54 @@
   </td>
  </tr>
  <!-- END qf_element -->
-
- <tr><td colspan="2">
- <!-- BEGIN qf_group -->
-  <table class="list">
+<!-- BEGIN qf_group_table -->
+  <tr><td colspan="2">
+    <table class="list">
     <tr>
       <th colspan="8">func_gettext("Rights")</th>
     </tr>
     <tr>
       <th colspan="2">func_gettext("Application")</th>
       <th colspan="2">func_gettext("Area")</th>
-      <th colspan="1">func_gettext("Right")</th>
+      <th colspan="2">func_gettext("Right")</th>
       <th colspan="1">func_gettext("Level")</th>
-    </tr>
-    <!-- BEGIN qf_group_table -->
-    <!-- BEGIN qf_group_loop -->
+    </tr>{qf_element}
+
+
+    
+    
+    <!-- BEGIN qf_group_row -->
+        
     <tr>
-        <td class="panel">{application}</td>
-        <td class="panel">-></td>
-        <td class="panel">{area}</td>
-        <td class="panel">-></td>
-        <td class="panel">{right}</td>
+    
+    <!-- BEGIN qf_group_row_loop -->
+
+    
+          <!-- BEGIN qf_group_row_static -->
+          <!-- BEGIN qf_static_row_element --><td class="panel">{qf_element}</td>
+          <td class="panel">-></td>
+
+          <!-- END qf_group_row_static_element --> 
+          <!-- END qf_group_row_static -->
+    
+
+        <!-- BEGIN qf_group_row_element -->
         <td class="panel">
             {qf_element}
         </td>
-    </tr>
-    <!-- END qf_group_loop -->
-    <!-- END qf_group_table -->
-  </table>
-  <!-- END qf_group -->
+        <!-- END qf_group_row_element -->
+
+    <!-- END qf_group_row_loop -->
+
   </td></tr>
 
- <tr>
-  <td>{edit_submit_label}</td>
-  <td>{edit_submit_html}{edit_delete_html}</td>
+        <!-- END qf_group_row -->
+     
+           </tr>
+       </table>
+    <!-- END qf_group_table  -->
+
+
   <!-- END qf_main_loop -->
- </tr>
 </table>
 

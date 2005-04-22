@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: group.php,v 1.9 2005/04/22 07:11:46 cbleek Exp $
+ *   $Id: group.php,v 1.10 2005/04/22 11:12:06 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITDynamic.php';
@@ -49,12 +49,7 @@ if ($edit) {
 
     $form->addElement('hidden', 'id', $_GET['edit']);
 
-    if ($level>1) {
-        $form->addElement('submit', 'submit', _("Save"));
-    }
-    if ($level>2) {
-        $form->addElement('submit', 'delete', _("Delete"));
-    }
+
     
     $groups = $admin->perm->getGroups(array('filters'  => array('group_id' => $_GET['edit']),
                                             'fields'   => array('group_id',
@@ -78,6 +73,14 @@ if ($edit) {
     $defaultValues['rights'] = $selectedRights;   
     $form->setDefaults($defaultValues);
     
+    
+    if ($level>1) {
+        $form->addElement('submit', 'submit', _("Save"));
+    }
+    if ($level>2) {
+        $form->addElement('submit', 'delete', _("Delete"));
+    }
+    
 } else {
     $form->addElement('submit', 'submit', _("Create"));
 }
@@ -85,7 +88,6 @@ $tpl->addBlockfile('contentmain', 'group', 'editgroup.html');
 
 
 // right stuff
-$tpl->setCurrentBlock('rightlist');
 $apps = $admin->perm->getApplications(array('fields' => array('application_id', 
                                                               'name', 
                                                               'description',
@@ -104,22 +106,22 @@ foreach($apps as $app) {
                                                                    'area_id'        => $area['area_id'] ),
                                                 'fields'  => array('name','right_id')));
         foreach($rights as $right) {
-            $tpl->setVariable(array('application'   => $app['name'],
-                                    'area'          => $area['name'],
-                                    'right'         => $right['name']));
 
-            $selectElements[]=HTML_QuickForm::createElement('select',$right['right_id'],null,array('0'=>HRADMIN_LEVEL_0,
-                                                                                                   '1'=>HRADMIN_LEVEL_1,
-                                                                                                   '2'=>HRADMIN_LEVEL_2,
-                                                                                                   '3'=>HRADMIN_LEVEL_3));
-                                                                                          
-          
-            $tpl->parseCurrentBlock();
+            $Cols[] = HTML_QuickForm::createElement('static','app'.$right['right_id'],null,$app['name']);
+            $Cols[] = HTML_QuickForm::createElement('static','area'.$right['right_id'],null,$area['name']);
+            $Cols[] = HTML_QuickForm::createElement('static','right'.$right['right_id'],null,$right['name']);
+            $Cols[] = HTML_QuickForm::createElement('select',$right['right_id'],null,array('0'=>HRADMIN_LEVEL_0,
+                                                                                                    '1'=>HRADMIN_LEVEL_1,
+                                                                                                    '2'=>HRADMIN_LEVEL_2,
+                                                                                                    '3'=>HRADMIN_LEVEL_3));
+            $form->addGroup(@$Cols,'rights');
+            unset($Cols);
+ 
         }
-        $form->addGroup(@$selectElements,'rights');
 
     }
 }
+#$form->addElement('static','table',null,'');
 
 $form->addRule('name', _("Name is required!"), 'required');
 if ($level < 2) {
@@ -176,8 +178,7 @@ $renderer =& new HTML_QuickForm_Renderer_ITDynamic($tpl);
 #$renderer->setErrorTemplate('<font color="orange" size="1">{error}</font><br/>{html}');            
 
 $renderer->setElementBlock(array(
-    'name'     => 'qf_group_table',
-    'address'  => 'qf_group_table'
+    'rights'  => 'qf_group_row'
 ));
         
 
