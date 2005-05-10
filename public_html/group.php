@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: group.php,v 1.10 2005/04/22 11:12:06 cbleek Exp $
+ *   $Id: group.php,v 1.11 2005/05/10 07:07:02 cbleek Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITDynamic.php';
@@ -37,9 +37,10 @@ $tpl->setVariable(array('maxlength'=>'100',
                   'class'=>'formFieldLong'));
 
 $form->addElement('text', 'description', _("Description"));
-$tpl->setVariable(array('maxlength'=>'100',
-                  'class'=>'formFieldLong'));
 
+$tpl->setVariable(array('maxlength'=>'100',
+                       'class'=>'formFieldLong'));
+$form->addElement('hidden', 'id');
 $form->addElement('text', 'define', _("Define name"));
 
 $tpl->setVariable(array('maxlength' => '15',
@@ -47,7 +48,7 @@ $tpl->setVariable(array('maxlength' => '15',
 
 if ($edit) {
 
-    $form->addElement('hidden', 'id', $_GET['edit']);
+
 
 
     
@@ -121,7 +122,6 @@ foreach($apps as $app) {
 
     }
 }
-#$form->addElement('static','table',null,'');
 
 $form->addRule('name', _("Name is required!"), 'required');
 if ($level < 2) {
@@ -130,21 +130,16 @@ if ($level < 2) {
 
 if ($form->validate()) {
     if ($delete) {
-        $admin->perm->removeGroup(array('group_id' => $_POST['id'],
+        $admin->perm->removeGroup(array('group_id' => $form->exportValue('id'),
                                         'recursive' => true ));
         header("Location: groups.php");
     } elseif ( @$_POST['id'] >0 && $level>1) {
-    print "UPDATE";
-    
-    $values=$form->exportValues();
-    var_dump::display($values);
-
-        $data   = array('group_define_name'=>$form->exportValue("define"));
-        $filter = array('group_id'=> $_POST['id']);
+        $data   = array('group_define_name' => $form->exportValue("define") );
+        $filter = array('group_id'=> $form->exportValue('id'));
         $admin->perm->updateGroup($data,$filter);
         
         
-        $filter = array('section_id'   => $_POST['id'],
+        $filter = array('section_id'   => $form->exportValue('id'),
                         'section_type' => LIVEUSER_SECTION_GROUP, 
                         'language_id'  =>0);
         $data   = array('name'         => $form->exportValue("name"), 
@@ -152,7 +147,7 @@ if ($form->validate()) {
                 
         $admin->perm->updateTranslation($data,$filter);
                     
-        setGroupRights($_POST['id'],$_POST['rights']);
+        setGroupRights($form->exportValue('id'),$form->exportValue('rights'));
         header("Location: groups.php");
     } elseif ($level>2) {  
         $group_id = $admin->perm->addGroup(
@@ -206,9 +201,6 @@ function setGroupRights($group_id,$newRights = array()) {
                             
     $rights = $admin->perm->getRights($params);
     
-    
-print "<h1>Group=$group_id</h1>";
-var_dump::display($rights);
     
     foreach ($rights as $right => $level) {
     

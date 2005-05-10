@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: common.inc,v 1.7 2005/04/21 15:44:01 cbleek Exp $
+ *   $Id: common.inc,v 1.8 2005/05/10 07:07:02 cbleek Exp $
  */
 require_once 'define.inc';
 require_once 'config.inc';
@@ -26,9 +26,6 @@ include_once 'i18n.inc';
 require_once 'LiveUser.php';
 require_once 'LiveUser/Admin.php';
 require_once 'HTML/TreeMenu.php';
-
-
-$lu_dsn = array('dsn' => $dsn);
 
 error_reporting(E_ALL);
 
