@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: user.php,v 1.7 2005/04/21 14:11:37 cbleek Exp $
+ *   $Id: user.php,v 1.8 2005/05/13 08:32:10 goetsch Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -63,14 +63,20 @@ if ($edit || $delete) {
         $form->addElement('submit', 'delete', _("Delete"));
     }
     
-    $filter = array(array('cond' => '', 'name' => 'auth_user_id', 'op' => '=', 'value' => $_GET['edit'], 'type' => 'text'));
+    $filter = array(array(
+        'cond' => '', 
+        'name' => 'auth_user_id', 
+        'op' => '=', 
+        'value' => $current_user_id, 
+        'type' => 'text')
+    );
         
     $users  = $admin->auth->getUsers($filter);
     
     $defaultValues['login']      = $users[0]['handle'];
     $defaultValues['name']       = $users[0]['name'];
     $defaultValues['email']      = $users[0]['email'];
-    $form->addElement('hidden', 'id', $users[0]['auth_user_id']);
+    $form->addElement('hidden', 'user_id', $current_user_id);
     
     $form->setDefaults($defaultValues);
 } else {
@@ -81,11 +87,13 @@ if ($edit || $delete) {
 // groupstuff
 $tpl->setCurrentBlock('grouplist');
 $groups = $admin->perm->getGroups();
+
 foreach($groups as $group) {
     $tpl->setVariable(array('group'     => $group['group_define_name'],
-                            'group_box' => getGroupCheckBox($group['group_id'],@$_GET['edit'])));
+                            'group_box' => getGroupCheckBox($group['group_id'],getPermUserId(isset($current_user_id)?$current_user_id:''))));
     $tpl->parseCurrentBlock();
 }
+
 
 // form rules
 $form->addRule('login', _("Username is required!"), 'required');
@@ -109,33 +117,40 @@ if ($form->validate()) {
         'email' => $form->exportValue("email")
     ); 
     if ($delete) {
-        $res = $admin->removeUser(getPermUserId($form->exportValue('id')));
+        $res = $admin->removeUser(getPermUserId($current_user_id));
         header("Location: users.php");
         exit;
-    } elseif (isset($_POST['id']) && $_POST['id']>0 && $level>1) {
+    } elseif (isset($current_user_id) && $level>1) {
         $pass = null;
         if ($form->exportValue("password")) {
             $pass = $form->exportValue("password");
         }
+        $perm_id = getPermUserId($current_user_id);
         $admin->updateUser(
-            $form->exportValue('id'), 
+            $perm_id, 
             $form->exportValue("login"), 
             $pass, 
             array(
                 'is_active' => true
             ), 
             $custom);
-        setGroups(getPermUserId($form->exportValue('id')),$_POST['groups']);
+        setGroups($perm_id,$_POST['groups']);
         header("Location: users.php");
     } elseif ($level>2) {
-        $user_id = $admin->addUser($_POST["login"], $_POST["password"], true, $custom, null, null);
-        
-        if (DB::isError($user_id)) {
-            var_dump::display($user_id);
-        } else {
-                setGroups($perm_id,$_POST['groups']);
-                header("Location: users.php");
+        $current_user_id = $admin->addUser(
+            $form->exportValue("login"),
+            $form->exportValue("password"),
+            true, 
+            $custom, 
+            null, 
+            null
+        );        
+        if (DB::isError($current_user_id)) {
+            var_dump::display($current_user_id);
+            exit;
         }
+        setGroups(getPermUserId($current_user_id),isset($_POST['groups'])?$_POST['groups']:array());
+        header("Location: users.php");        
     }    
     exit;
 }
@@ -162,19 +177,22 @@ function getGroupCheckBox($group_id, $user_id)
 function isInGroup($group_id, $user_id)
 {
     global $admin;
-    return $admin->perm->getGroups(array('filters'=>array('group_id'=>$group_id,
-                                                         'perm_user_id'=>$user_id)));
+    return $admin->perm->getGroups(array(
+        'filters'=>array(
+            'group_id'=>$group_id,
+            'perm_user_id'=>$user_id))
+    );
 }
 
 function setGroups($user_id, $newGroups = array())
 {
     global $admin;
-    $groups = $admin->perm->getGroups();        
+    $groups = $admin->perm->getGroups();
     foreach ($groups as $group) {
         $filters = array(
             'group_id'     => $group,
             'perm_user_id' => $user_id
-                );
+        );
         $removed = $admin->perm->removeUserFromGroup($filters);             
     }
     if (!empty($newGroups)) {

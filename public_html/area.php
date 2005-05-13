@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: area.php,v 1.6 2005/04/21 14:11:37 cbleek Exp $
+ *   $Id: area.php,v 1.7 2005/05/13 08:32:10 goetsch Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -32,10 +32,10 @@ if (!checkRights(HRADMIN_RIGHT_AREAS)) {
 
 checkApplication();
 
-
 $form = new HTML_QuickForm('edit','POST');
 
-//$form->addElement('hidden', 'app_id', _($current_application_id));
+$form->addElement('hidden', 'app_id', _($current_application_id));
+$form->addElement('hidden', 'area_id', _($current_area_id));
 
 $form->addElement('text', 'name', _("Name"));
 $tpl->setVariable(array('maxlength'=>'100',
@@ -55,14 +55,20 @@ if ($edit) {
         $form->addElement('submit', 'delete', _("Delete"));
     }
     
-    $areas = $admin->perm->getAreas(array('filter' => array('application_id' => $_GET['app_id'],
-                                                            'area_id'        => $_GET['edit']),
-                                          'fields' => array('area_id', 'name', 'description', 'area_define_name')));
-
+    $areas = $admin->perm->getAreas(array(
+        'filters' => array(
+            'application_id' => (int)$current_application_id,
+            'area_id'        => (int)$current_area_id),
+        'fields' => array(
+            'area_id', 
+            'name', 
+            'description', 
+            'area_define_name')
+    ));
     $defaultValues['name']          = $areas[0]['name'];
     $defaultValues['description']   = $areas[0]['description'];
     $defaultValues['define']        = $areas[0]['area_define_name'];
-    $form->addElement('hidden', 'id', $_GET['edit']);
+    $form->addElement('hidden', 'id', $current_area_id);
     $form->setDefaults($defaultValues);
 } else {
     $form->addElement('submit', 'submit', _("Create"));
@@ -74,18 +80,47 @@ if ($level<2) {
 }
 if ($form->validate()) {
     if ($delete && $level>2) {
-        $objRightsAdminPerm->removeArea($_POST['id']);
+        $admin->perm->removeArea(array(
+            'area_id'   => $current_area_id
+        ));
         header("Location: areas.php?".getAppIdParameter());
     } elseif ($edit && $level>1) {
-        $objRightsAdminPerm->updateArea($_POST['id'],$current_application_id,$_POST["define"],$_POST["name"], $_POST["description"]);
+        $admin->perm->updateArea(array(
+            'area_id'=>$current_area_id,
+            'application_id' => $current_application_id,
+            'area_define_name' => $form->exportValue('define')
+        ), array('area_id'        => $current_area_id));
+        $filters   = array(
+            'section_id'    => $current_area_id,
+            'section_type'  => LIVEUSER_SECTION_AREA, 
+            'language_id'   => 0
+        );
+        $data      = array(
+            'name' => $form->exportValue('name'), 
+            'description'  => $form->exportValue('description')
+        );                
+        $admin->perm->updateTranslation($data,$filters);
         header("Location: areas.php?".getAppIdParameter());        
     } elseif ($level>2) {
-        $area_id = $objRightsAdminPerm->addArea($current_application_id,$_POST["define"],$_POST["name"], $_POST["description"]);
-        if (DB::isError($area_id)) {
+        $data = array(
+            'application_id' => $current_application_id,
+            'area_define_name' => $form->exportValue('define')
+        );
+        $current_area_id = $admin->perm->addArea($data);
+        if (DB::isError($current_area_id)) {
             var_dump($area_id);
-        } else {
-            header("Location: areas.php?".getAppIdParameter());
-        }
+            exit;
+        } 
+        $data      = array(
+            'section_id'=>$current_area_id,
+            'section_type' => LIVEUSER_SECTION_AREA, 
+            'language_id'=>0,
+            'name' => $form->exportValue('name'), 
+            'description'  => $form->exportValue('description')
+        );                
+        $admin->perm->addTranslation($data);
+        header("Location: areas.php?".getAppIdParameter());
+        
     }    
     exit;
 }

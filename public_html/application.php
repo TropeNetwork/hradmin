@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: application.php,v 1.8 2005/04/21 15:44:01 cbleek Exp $
+ *   $Id: application.php,v 1.9 2005/05/13 08:32:10 goetsch Exp $
  */
  
 require_once 'HTML/QuickForm.php';
@@ -49,13 +49,13 @@ if ($edit) {
         $form->addElement('submit', 'submit', _("Save"));
     }
 
-    $apps = $admin->perm->getApplications(array('filters' => array('application_id' => $_GET['edit']),
+    $apps = $admin->perm->getApplications(array('filters' => array('application_id' => $current_application_id),
                                                 'fields'  => array('application_id','name','description','application_define_name')));
     $current_application_id         = $apps[0]['application_id'];
     $defaultValues['name']          = $apps[0]['name'];
     $defaultValues['description']   = $apps[0]['description'];
     $defaultValues['define']        = $apps[0]['application_define_name'];
-    $form->addElement('hidden', 'id', $_GET['edit']);
+    $form->addElement('hidden', 'app_id', $current_application_id);
     
     $form->setDefaults($defaultValues);
 } else {
@@ -68,37 +68,46 @@ if ($level<2) {
 }
 
 if ($form->validate()) {
-    if (isset($_POST['id']) && $_POST['id']>0 && $level>1) {
-        $data      = array('application_define_name' => $_POST['define'], 
-                           'name'                    => $_POST['name'], 
-                           'description'             => $_POST['description']);
-        $filters   = array('application_id' => $_POST['id']);
+    if (isset($current_application_id) && $level>1) {
+        $data      = array(
+            'application_define_name' => $form->exportValue('define'), 
+        );
+        $filters   = array('application_id' => $current_application_id);
         $updateApp = $admin->perm->updateApplication($data, $filters);
 
-        $filters   = array('section_id'=>$_POST['id'],'section_type' => LIVEUSER_SECTION_APPLICATION, 'language_id'=>0);
-        $data      = array('name' => $_POST['name'], 'description'  => $_POST['description']);
+        $filters   = array(
+            'section_id'=>$current_application_id,
+            'section_type' => LIVEUSER_SECTION_APPLICATION, 
+            'language_id'=>0
+        );
+        $data      = array(
+            'name' => $form->exportValue('name'), 
+            'description'  => $form->exportValue('description')
+        );
                 
         $admin->perm->updateTranslation($data,$filters); 
 
         header("Location: applications.php");        
     } elseif($level>2) {
-        $data = array('application_define_name' => $_POST['define']);
+        $data = array('application_define_name' => $form->exportValue('define'));
         $app_id = $admin->perm->addApplication($data);
 
         if (DB::isError($app_id)) {
             var_dump($app_id);
-        } else {
-            $data = array(
-                'section_id'   => $app_id,
-                'section_type' => LIVEUSER_SECTION_APPLICATION,
-                'language_id'  => '0',
-                'name'         => $_POST['name'],
-                'description'  => $_POST['description']);
-                
-            $admin->perm->addTranslation($data); 
-
-            header("Location: applications.php");
+            exit;
         }
+        $data = array(
+            'section_id'   => $app_id,
+            'section_type' => LIVEUSER_SECTION_APPLICATION,
+            'language_id'  => '0',
+            'name'         => $form->exportValue('name'),
+            'description'  => $form->exportValue('description')
+        );
+                
+        $admin->perm->addTranslation($data); 
+
+        header("Location: applications.php");
+        
     }
     exit;
 }

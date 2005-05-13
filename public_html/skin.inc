@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: skin.inc,v 1.6 2005/04/21 15:44:02 cbleek Exp $
+ *   $Id: skin.inc,v 1.7 2005/05/13 08:32:10 goetsch Exp $
  */
 require_once 'HTML/Template/Sigma.php';
 require_once 'layersmenu/lib/PHPLIB.php';
@@ -47,18 +47,18 @@ function getMenuString() {
     $menu .= ".|".gettext("Applications")."|applications.php|".gettext("Applications")."|\n";
     $apps = $admin->perm->getApplications();
     foreach($apps as $app) {
-        $menu .= "..|".$app['application_define_name']."|application.php?edit=".$app['application_id']."||\n";
+        $menu .= "..|".$app['application_define_name']."|application.php?edit=1&amp;app_id=".$app['application_id']."||\n";
         $areas = $admin->perm->getAreas(array('filters'=>array('application_id'=>$app['application_id'] )));
         $menu .= "...|".gettext("Areas")."|areas.php?app_id=".$app['application_id']."|".gettext("Areas")."|\n";
         $menu .= "...|---|||\n";
         foreach($areas as $area) {
-            $menu .= "...|".$area['area_define_name']."|area.php?edit=".$area['area_id']."&amp;app_id=".$app['application_id']."||\n";
+            $menu .= "...|".$area['area_define_name']."|area.php?edit=1&amp;area_id=".$area['area_id']."&amp;app_id=".$app['application_id']."||\n";
             $menu .= "....|".gettext("Rights")."|rights.php?area_id=".$area['area_id']."&amp;app_id=".$app['application_id']."|".gettext("Rights")."|\n";
             $menu .= "....|---|||\n";
             $rights = $admin->perm->getRights(array('filters'=>array('area_id'=> $area['area_id'],
                                                                     'application_id' => $app['application_id'])));
             foreach($rights as $right) {
-                $menu .= "....|".$right['right_define_name']."|right.php?edit=".$right['right_id']."&amp;app_id=".$app['application_id']."&amp;area_id=".$area['area_id']."||\n";
+                $menu .= "....|".$right['right_define_name']."|right.php?edit=1&amp;right_id=".$right['right_id']."&amp;app_id=".$app['application_id']."&amp;area_id=".$area['area_id']."||\n";
             }
         }
     }

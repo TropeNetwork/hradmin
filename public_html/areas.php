@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: areas.php,v 1.7 2005/04/21 15:44:01 cbleek Exp $
+ *   $Id: areas.php,v 1.8 2005/05/13 08:32:10 goetsch Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -31,14 +31,12 @@ if (!checkRights(HRADMIN_RIGHT_AREAS)) {
 }
 
 checkApplication();
-
-$areas = $admin->perm->getAreas(array('fields' => array('area_id', 'name', 'description','area_define_name'),
-                                      'filters' => array('application_id' => $_GET['app_id'] )));
+$areas = $admin->perm->getAreas(array('fields' => array('area_id','name', 'description','area_define_name'),'filters' => array('application_id' => $_GET['app_id'] )));
 
 $tpl->addBlockfile('contentmain', 'areas', 'arealist.html');
 $tpl->setCurrentBlock('arealist');
 foreach($areas as $area) {
-    $tpl->setVariable(array('name'        => '<a href="area.php?edit='.$area['area_id'].'&app_id='.$current_application_id.'">'.$area['name'].'</a>',
+    $tpl->setVariable(array('name'        => '<a href="area.php?edit=1&amp;area_id='.$area['area_id'].'&amp;app_id='.$current_application_id.'">'.$area['name'].'</a>',
                             'description' => $area['description'],
                             'id'          => $area['area_id'],
                             'define'      => $area['area_define_name']));

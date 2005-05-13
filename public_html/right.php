@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: right.php,v 1.6 2005/05/10 07:07:02 cbleek Exp $
+ *   $Id: right.php,v 1.7 2005/05/13 08:32:10 goetsch Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -57,15 +57,23 @@ if ($edit) {
         $form->addElement('submit', 'delete', _("Delete"));
     }
     
-    $rights = $admin->perm->getRights(array('filters'=> array('right_id'       => $_GET['edit'],
-                                                              'area_id'        => $_GET['area_id'],
-                                                              'application_id' => $_GET['app_id']),
-                                            'fields' => array('right_define_name','name','description')));
-                                            
-    $defaultValues['name']          = $rights[0]['name'];
-    $defaultValues['description']   = $rights[0]['description'];
+    $rights = $admin->perm->getRights(array(
+        'filters'=> array(
+            'right_id'       => $current_right_id,
+            'area_id'        => $current_area_id,
+            'application_id' => $current_application_id),
+        'fields' => array(
+            'right_define_name')
+    ));
+    $trans = $admin->perm->getTranslations(array('filters'=>array(
+        'section_id'    => $current_right_id,
+        'section_type'  => LIVEUSER_SECTION_RIGHT, 
+        'language_id'   => 0
+    )));
+    $defaultValues['name']          = $trans[0]['name'];
+    $defaultValues['description']   = $trans[0]['description'];
     $defaultValues['define']        = $rights[0]['right_define_name'];
-    $form->addElement('hidden', 'id', $_GET['edit']);
+    $form->addElement('hidden', 'right_id', $current_right_id);
     
     $form->setDefaults($defaultValues);
 } else {
@@ -79,30 +87,55 @@ if ($level<2) {
 
 if ($form->validate()) {
     if ($delete && $level>2) {
-        $objRightsAdminPerm->removeRight($_POST['id']);
-        header("Location: rights.php?".getAppIdParameter().'&'.getAreaIdParameter());
-    } elseif (isset($_POST['id']) && $_POST['id']>0 && $level>1) {
-        $admin->perm->updateRight(
-            $form->exportValue('id'),
-            $current_area_id,
-            $form->exportValue("define"),
-            $form->exportValue("name"),
-            $form->exportValue("description")
+        $admin->perm->removeRight(array(
+            'right_id'  => $current_right_id
+        ));
+        header("Location: rights.php?".getAppIdParameter().getAreaIdParameter());
+    } elseif (isset($current_right_id) && $level>1) {
+        $admin->perm->updateRight(array(
+            'area_id'           => $current_area_id,
+            'right_define_name' => $form->exportValue('define')
+        ), array('right_id'     => $current_right_id));
+        $filters   = array(
+            'section_id'    => $current_right_id,
+            'section_type'  => LIVEUSER_SECTION_RIGHT, 
+            'language_id'   => 0
         );
-        
-        header("Location: rights.php?".getAppIdParameter().'&'.getAreaIdParameter());
-    } elseif ($level>2) {
-        $right_id = $objRightsAdminPerm->addRight(
-            $current_area_id,
-            $form->exportValue("define"),
-            $form->exportValue("name"),
-            $form->exportValue("description")
-        );
-        if (DB::isError($group_id)) {
-            var_dump($group_id);
-        } else {
-            header("Location: rights.php?".getAppIdParameter().'&'.getAreaIdParameter());
+        $data      = array(
+            'name'          => $form->exportValue('name'), 
+            'description'   => $form->exportValue('description')
+        );   
+        if (!$admin->perm->updateTranslation($data,$filters)) {
+            $data      = array(
+                'section_id'    => $current_right_id,
+                'section_type'  => LIVEUSER_SECTION_RIGHT, 
+                'language_id'   => 0,
+                'name'          => $form->exportValue('name'), 
+                'description'   => $form->exportValue('description')
+            );                
+            $admin->perm->addTranslation($data);
         }
+        header("Location: rights.php?".getAppIdParameter().getAreaIdParameter());
+    } elseif ($level>2) {
+        $data = array(
+            'area_id'           => $current_area_id,
+            'right_define_name' => $form->exportValue('define')
+        );
+        $current_right_id = $admin->perm->addRight($data);
+        if (DB::isError($current_right_id)) {
+            var_dump($current_right_id);
+            exit;
+        } 
+        $data      = array(
+            'section_id'    => $current_right_id,
+            'section_type'  => LIVEUSER_SECTION_RIGHT, 
+            'language_id'   => 0,
+            'name'          => $form->exportValue('name'), 
+            'description'   => $form->exportValue('description')
+        );                
+        $admin->perm->addTranslation($data);
+        header("Location: rights.php?".getAppIdParameter().getAreaIdParameter());
+        
     }
     exit;
 }

@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: applications.php,v 1.6 2005/04/21 14:11:37 cbleek Exp $
+ *   $Id: applications.php,v 1.7 2005/05/13 08:32:10 goetsch Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -35,10 +35,12 @@ $apps = $admin->perm->getApplications(array('fields' => array('application_id', 
 $tpl->addBlockfile('contentmain', 'applications', 'applicationlist.html');
 $tpl->setCurrentBlock('applicationlist');
 foreach($apps as $app) {
-    $tpl->setVariable(array('name'          => '<a href="application.php?edit='.$app['application_id'].'" title="'._("Edit").'"><img src="/images/edit.png" alt="'._("Edit").'" /> '.$app['name'].'</a>',
-                            'id'            => $app['application_id'],
-                            'description'   => $app['description'],
-                            'define'        => $app['application_define_name']));
+    $tpl->setVariable(array(
+        'name'          => '<a href="application.php?edit=1&amp;app_id='.$app['application_id'].'" title="'._("Edit").'"><img src="/images/edit.png" alt="'._("Edit").'" /> '.$app['name'].'</a>',
+        'id'            => $app['application_id'],
+        'description'   => $app['description'],
+        'define'        => $app['application_define_name']
+    ));
     $tpl->parseCurrentBlock();
 }
 if ($level>2) {

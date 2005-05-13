@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: groups.php,v 1.5 2005/04/19 16:57:23 cbleek Exp $
+ *   $Id: groups.php,v 1.6 2005/05/13 08:32:10 goetsch Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -37,7 +37,7 @@ $groups = $admin->perm->getGroups(array('with_rights'=>true,
 $tpl->addBlockfile('contentmain', 'groups', 'grouplist.html');
 $tpl->setCurrentBlock('grouplist');
 foreach($groups as $group) {
-    $tpl->setVariable(array('name'          => '<a href="group.php?edit='.$group['group_id'].'">'.$group['name'].'</a>',
+    $tpl->setVariable(array('name'          => '<a href="group.php?edit=1&group_id='.$group['group_id'].'">'.$group['name'].'</a>',
                             'description'   => $group['description'],
                             'define'        => $group['group_define_name']));
     $tpl->parseCurrentBlock();

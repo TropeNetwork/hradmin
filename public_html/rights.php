@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: rights.php,v 1.6 2005/04/21 15:44:02 cbleek Exp $
+ *   $Id: rights.php,v 1.7 2005/05/13 08:32:10 goetsch Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -32,21 +32,32 @@ if (!checkRights(HRADMIN_RIGHT_RIGHTS)) {
 checkApplication();
 checkArea();
 
-$rights = $admin->perm->getRights(array('fields'  => array('right_define_name','name','right_id','description'),
-                                        'filters' => array('application_id'=> $_GET['app_id'],
-                                                           'area_id'       => $_GET['area_id'])));
-  
+$rights = $admin->perm->getRights(array(
+    'fields'  => array(
+        'right_define_name',
+        'right_id',),
+    'filters' => array(
+        'application_id'=> $current_application_id,
+        'area_id'       => $current_area_id))
+);
 $tpl->addBlockfile('contentmain', 'rights', 'rightlist.html');
 $tpl->setCurrentBlock('rightlist');
 
 foreach($rights as $right) {
-    $tpl->setVariable(array('name'          => '<a href="right.php?'.getAppIdParameter().'&'.getAreaIdParameter().'&edit='.$right['right_id'].'">'.$right['name'].'</a>',
-                            'description'   => $right['description'],
-                            'define'        => $right['right_define_name']));
+    $current_right_id = $right['right_id'];
+    $trans = $admin->perm->getTranslations(array('filters'=>array(
+        'section_id'    => $current_right_id,
+        'section_type'  => LIVEUSER_SECTION_RIGHT, 
+        'language_id'   => 0
+    )));
+    $tpl->setVariable(array(
+        'name'          => '<a href="right.php?'.getAppIdParameter().getAreaIdParameter().getRightIdParameter().'edit=1"><img src="/images/edit.png" alt="'._("Edit").'" /> '.$trans[0]['name'].'</a>',
+        'description'   => $trans[0]['description'],
+        'define'        => $right['right_define_name']));
     $tpl->parseCurrentBlock();
 }
 if ($level>2) {
-    $rightcontent = '<a href="right.php?'.getAppIdParameter().'&'.getAreaIdParameter().'" title="'._("New right").'"><img src="/images/new.png" alt="'._("New right").'" /></a>';
+    $rightcontent = '<a href="right.php?'.getAppIdParameter().getAreaIdParameter().'" title="'._("New right").'"><img src="/images/new.png" alt="'._("New right").'" /></a>';
 }
 $tpl->setVariable('contentright',$rightcontent);
 $tpl->setVariable('title',_("Right"));

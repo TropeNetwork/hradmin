@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: group.php,v 1.11 2005/05/10 07:07:02 cbleek Exp $
+ *   $Id: group.php,v 1.12 2005/05/13 08:32:10 goetsch Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITDynamic.php';
@@ -40,19 +40,14 @@ $form->addElement('text', 'description', _("Description"));
 
 $tpl->setVariable(array('maxlength'=>'100',
                        'class'=>'formFieldLong'));
-$form->addElement('hidden', 'id');
+$form->addElement('hidden', 'group_id');
 $form->addElement('text', 'define', _("Define name"));
 
 $tpl->setVariable(array('maxlength' => '15',
                         'class'     => 'formFieldLong'));
 
 if ($edit) {
-
-
-
-
-    
-    $groups = $admin->perm->getGroups(array('filters'  => array('group_id' => $_GET['edit']),
+    $groups = $admin->perm->getGroups(array('filters'  => array('group_id' => $current_group_id),
                                             'fields'   => array('group_id',
                                                                 'description',
                                                                 'name',
@@ -61,14 +56,15 @@ if ($edit) {
     $defaultValues['name']          = $groups[0]['name'];
     $defaultValues['define']        = $groups[0]['group_define_name'];
     $defaultValues['description']   = $groups[0]['description'];
-    $defaultValues['id']            = $_GET['edit'];
+    $defaultValues['group_id']      = $current_group_id;
 
 
-    $params = array('fields'  => array('right_id','right_level'),
-                    'filters' => array('group_id' => $_GET['edit']));
+    $params = array('fields'  => array('group_id','right_id','right_level'),
+                    'filters' => array('group_id' => $current_group_id ));
                   
     $group_rights = $admin->perm->getRights($params);
-    foreach ($group_rights AS $right){
+    $selectedRights = array();
+    foreach ($group_rights as $right){
        $selectedRights[$right['right_id']]=$right['right_level'];      
     }
     $defaultValues['rights'] = $selectedRights;   
@@ -93,6 +89,10 @@ $apps = $admin->perm->getApplications(array('fields' => array('application_id',
                                                               'name', 
                                                               'description',
                                                               'application_define_name')));
+define('HRADMIN_LEVEL_0',_('none'));
+define('HRADMIN_LEVEL_1',_('read'));
+define('HRADMIN_LEVEL_2',_('write'));
+define('HRADMIN_LEVEL_3',_('delete'));
 
 foreach($apps as $app) {
 
@@ -107,10 +107,14 @@ foreach($apps as $app) {
                                                                    'area_id'        => $area['area_id'] ),
                                                 'fields'  => array('name','right_id')));
         foreach($rights as $right) {
-
+            $trans = $admin->perm->getTranslations(array('filters'=>array(
+                'section_id'    => $right['right_id'],
+                'section_type'  => LIVEUSER_SECTION_RIGHT, 
+                'language_id'   => 0
+            )));
             $Cols[] = HTML_QuickForm::createElement('static','app'.$right['right_id'],null,$app['name']);
             $Cols[] = HTML_QuickForm::createElement('static','area'.$right['right_id'],null,$area['name']);
-            $Cols[] = HTML_QuickForm::createElement('static','right'.$right['right_id'],null,$right['name']);
+            $Cols[] = HTML_QuickForm::createElement('static','right'.$right['right_id'],null,$trans[0]['name']);
             $Cols[] = HTML_QuickForm::createElement('select',$right['right_id'],null,array('0'=>HRADMIN_LEVEL_0,
                                                                                                     '1'=>HRADMIN_LEVEL_1,
                                                                                                     '2'=>HRADMIN_LEVEL_2,
@@ -130,40 +134,43 @@ if ($level < 2) {
 
 if ($form->validate()) {
     if ($delete) {
-        $admin->perm->removeGroup(array('group_id' => $form->exportValue('id'),
-                                        'recursive' => true ));
+        $admin->perm->removeGroup(array('group_id' => $form->exportValue('group_id')));
         header("Location: groups.php");
-    } elseif ( @$_POST['id'] >0 && $level>1) {
+    } elseif ( isset($current_group_id) && $level>1) {
         $data   = array('group_define_name' => $form->exportValue("define") );
-        $filter = array('group_id'=> $form->exportValue('id'));
+        $filter = array('group_id'=> $form->exportValue('group_id'));
         $admin->perm->updateGroup($data,$filter);
         
         
-        $filter = array('section_id'   => $form->exportValue('id'),
+        $filter = array('section_id'   => $form->exportValue('group_id'),
                         'section_type' => LIVEUSER_SECTION_GROUP, 
-                        'language_id'  =>0);
+                        'language_id'  => 0);
         $data   = array('name'         => $form->exportValue("name"), 
                         'description'  => $form->exportValue("description"));
                 
         $admin->perm->updateTranslation($data,$filter);
-                    
-        setGroupRights($form->exportValue('id'),$form->exportValue('rights'));
+        setGroupRights($form->exportValue('group_id'),$_POST['rights']);
         header("Location: groups.php");
-    } elseif ($level>2) {  
-        $group_id = $admin->perm->addGroup(
-            $form->exportValue("name"),
-            $form->exportValue("description"),            
-            $form->exportValue("define"),
-            array(
-                'is_active' => 'Y'
-            )
-        );
-        if (DB::isError($group_id)) {
-            var_dump($group_id);
-        } else {
-            setGroupRights($group_id,$_POST['rights']);
-            header("Location: groups.php");
+    } elseif ($level>2) {
+        $data   = array(
+            'group_define_name' => $form->exportValue("define"),
+            'is_active'         => 'Y',
+        );  
+        $current_group_id = $admin->perm->addGroup($data);
+        
+        if (DB::isError($current_group_id)) {
+            var_dump($current_group_id);
+            exit;
         }
+        $data   = array('section_id'   => $current_group_id,
+                        'section_type' => LIVEUSER_SECTION_GROUP, 
+                        'language_id'  => 0,
+                        'name'         => $form->exportValue("name"), 
+                        'description'  => $form->exportValue("description"));
+        $admin->perm->addTranslation($data);
+        setGroupRights($current_group_id,$_POST['rights']);
+        header("Location: groups.php");
+        
     }
     exit;
 }
@@ -219,7 +226,13 @@ function setGroupRights($group_id,$newRights = array()) {
                 $filters = array('right_id' => $newRight,
                                  'group_id' => $group_id);
   
-                $updated = $admin->perm->updateGroupRight($data, $filters);
+                if (!$admin->perm->updateGroupRight($data, $filters)) {
+                    $admin->perm->grantGroupRight(array(
+                        'right_level'   => $level,
+                        'right_id'      => $newRight,
+                        'group_id'      => $group_id
+                    ));
+                }
             }
         }    
     }
