@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: area.php,v 1.7 2005/05/13 08:32:10 goetsch Exp $
+ *   $Id: area.php,v 1.8 2005/05/17 17:28:48 goetsch Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITStatic.php';
@@ -80,10 +80,11 @@ if ($level<2) {
 }
 if ($form->validate()) {
     if ($delete && $level>2) {
-        $admin->perm->removeArea(array(
+        $res = $admin->perm->removeArea(array(
             'area_id'   => $current_area_id
         ));
         header("Location: areas.php?".getAppIdParameter());
+        exit;
     } elseif ($edit && $level>1) {
         $admin->perm->updateArea(array(
             'area_id'=>$current_area_id,

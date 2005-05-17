@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: group.php,v 1.12 2005/05/13 08:32:10 goetsch Exp $
+ *   $Id: group.php,v 1.13 2005/05/17 17:28:48 goetsch Exp $
  */
 require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ITDynamic.php';
@@ -58,19 +58,19 @@ if ($edit) {
     $defaultValues['description']   = $groups[0]['description'];
     $defaultValues['group_id']      = $current_group_id;
 
-
-    $params = array('fields'  => array('group_id','right_id','right_level'),
+    $params = array('fields'  => array('right_id','right_level'),
                     'filters' => array('group_id' => $current_group_id ));
                   
     $group_rights = $admin->perm->getRights($params);
     $selectedRights = array();
-    foreach ($group_rights as $right){
-       $selectedRights[$right['right_id']]=$right['right_level'];      
+    if (is_array($group_rights)) {
+        foreach ($group_rights as $right){
+            $selectedRights[$right['right_id']]=$right['right_level'];      
+        }
+        $defaultValues['rights'] = $selectedRights;   
+        
     }
-    $defaultValues['rights'] = $selectedRights;   
     $form->setDefaults($defaultValues);
-    
-    
     if ($level>1) {
         $form->addElement('submit', 'submit', _("Save"));
     }
@@ -93,15 +93,17 @@ define('HRADMIN_LEVEL_0',_('none'));
 define('HRADMIN_LEVEL_1',_('read'));
 define('HRADMIN_LEVEL_2',_('write'));
 define('HRADMIN_LEVEL_3',_('delete'));
-
 foreach($apps as $app) {
 
-    $areas = $admin->perm->getAreas(array('fields' => array('area_id', 
-                                                            'name', 
-                                                            'description',
-                                                            'area_define_name'),
-                                          'filters '=> array('application_id' => $app['application_id'] )));
-
+    $areas = $admin->perm->getAreas(array(
+        'fields' => array(
+            'area_id', 
+            'name', 
+            'description',
+            'area_define_name'),
+        'filters '=> array(
+            'application_id' => $app['application_id'] 
+    )));
     foreach($areas as $area) {
         $rights = $admin->perm->getRights(array('filters' => array('application_id' => $app['application_id'],
                                                                    'area_id'        => $area['area_id'] ),
@@ -114,11 +116,17 @@ foreach($apps as $app) {
             )));
             $Cols[] = HTML_QuickForm::createElement('static','app'.$right['right_id'],null,$app['name']);
             $Cols[] = HTML_QuickForm::createElement('static','area'.$right['right_id'],null,$area['name']);
-            $Cols[] = HTML_QuickForm::createElement('static','right'.$right['right_id'],null,$trans[0]['name']);
-            $Cols[] = HTML_QuickForm::createElement('select',$right['right_id'],null,array('0'=>HRADMIN_LEVEL_0,
-                                                                                                    '1'=>HRADMIN_LEVEL_1,
-                                                                                                    '2'=>HRADMIN_LEVEL_2,
-                                                                                                    '3'=>HRADMIN_LEVEL_3));
+            if (isset($trans[0]['name'])) {
+                $Cols[] = HTML_QuickForm::createElement('static','right'.$right['right_id'],null,$trans[0]['name']);
+            } else {
+                $Cols[] = HTML_QuickForm::createElement('static','right'.$right['right_id'],null,'');
+            }
+            $Cols[] = HTML_QuickForm::createElement('select',$right['right_id'],null,array(
+                '0'=>HRADMIN_LEVEL_0,
+                '1'=>HRADMIN_LEVEL_1,
+                '2'=>HRADMIN_LEVEL_2,
+                '3'=>HRADMIN_LEVEL_3
+            ));
             $form->addGroup(@$Cols,'rights');
             unset($Cols);
  
@@ -196,7 +204,7 @@ $tpl->show();
 
 function hasGroupRight($right_id,$rights = array())  
 {
-    return ; #$rights[$right_id];
+    return $rights[$right_id];
 }
 
 function setGroupRights($group_id,$newRights = array()) {
@@ -208,15 +216,12 @@ function setGroupRights($group_id,$newRights = array()) {
                             
     $rights = $admin->perm->getRights($params);
     
-    
-    foreach ($rights as $right => $level) {
-    
-        $filters  = array('right_id' => $right,
-                          'group_id' => $group_id);
-
-        $removed = $admin->perm->revokeGroupRight($filters);
-    
-    
+    if (is_array($rights)) {
+        foreach ($rights as $right => $level) {
+            $filters  = array('right_id' => $right,
+                              'group_id' => $group_id);
+            $removed = $admin->perm->revokeGroupRight($filters);
+        }
     }
     if (!empty($newRights)) {
         foreach ($newRights as $newRight => $level) {

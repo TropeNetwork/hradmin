@@ -18,7 +18,7 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: common.inc,v 1.9 2005/05/13 08:32:10 goetsch Exp $
+ *   $Id: common.inc,v 1.10 2005/05/17 17:28:48 goetsch Exp $
  */
 require_once 'config.inc';
 include_once 'i18n.inc';
@@ -28,8 +28,10 @@ require_once 'HTML/TreeMenu.php';
 
 error_reporting(E_ALL);
 
-define('HRADMIN',4);
-define('HRADMIN_ADMIN',3);
+define('HRADMIN',1);
+define('HRADMIN_ADMIN',1);
+//define('HRADMIN_RIGHT_APPLICATIONS',1);
+//define('HRADMIN_RIGHT_APPLICATIONS',1);
 
 // define the right constants
 $admin->perm->outputRightsConstants('constant',array(
@@ -148,6 +150,8 @@ function checkRights($right) {
     global $delete;
     global $usr;
     $level = $usr->checkRight($right);
+    $level = $level[0];
+    //$level = 3;
     if (!$level) {
         return false;
     }

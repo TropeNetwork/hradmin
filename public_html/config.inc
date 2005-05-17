@@ -18,9 +18,10 @@
  *
  *   Author: Gerrit Goetsch <goetsch@cross-solution.de>
  *   
- *   $Id: config.inc,v 1.6 2005/04/21 14:11:37 cbleek Exp $
+ *   $Id: config.inc,v 1.7 2005/05/17 17:28:48 goetsch Exp $
  */
 require_once 'Config.php';
+require_once 'MDB2.php';
 require_once 'DB.php';
 require_once 'Log.php';
 require_once 'Var_Dump.php';
@@ -43,9 +44,9 @@ $dsn = 'mysql://'.$hradmin_settings['database']['user'].':'.
 define('LOCALE',$hradmin_settings['i18n']['locale']);
 define('CHARSET',$hradmin_settings['i18n']['charset']);
 
-$db = DB::connect($dsn);
+$db = MDB2::connect($dsn);
 
-if (DB::isError($db)) {
+if (MDB2::isError($db)) {
     echo $db->getMessage() . ' ' . $db->getUserInfo();
 }
 
@@ -76,7 +77,7 @@ $conf =
         ),
         'authContainers' => array(
             array(
-                'type'          => 'DB',
+                'type'          => 'MDB2',
                 'name'          => 'DB_Local',
                 'loginTimeout'  => 0,
                 'expireTime'    => 3600,
@@ -106,7 +107,7 @@ $conf =
         'permContainer' => array(
             'type'       => 'Medium',
             'storage'    => array(
-                   'DB' => array(
+                   'MDB2' => array(
                       'connection' => $db,
                       'dsn' => $dsn,
                       'prefix' => 'liveuser_',
